@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Services;
-use App\User;
+use App\Post;
 use DB;
 use Vinkla\Hashids\Facades\Hashids;
 
-class UsereService
+class PostService
 {
     public function __construct(
         BankBranchMst $bank_branch_mst

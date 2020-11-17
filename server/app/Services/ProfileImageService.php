@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Services;
-use App\User;
+use App\ProfileImage;
 use DB;
 use Vinkla\Hashids\Facades\Hashids;
 
-class UsereService
+class ProfileImageService
 {
     public function __construct(
         BankBranchMst $bank_branch_mst
