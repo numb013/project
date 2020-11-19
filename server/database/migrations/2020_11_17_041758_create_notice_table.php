@@ -16,8 +16,8 @@ class CreateNoticeTable extends Migration
         Schema::create('notice', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->integer('type');
-            $table->integer('confirmed');
+            $table->integer('type')->comment('1システム 2動画　３リクエスト');
+            $table->integer('confirmed')->comment('既読');
             $table->integer('category');
             $table->string('message');
             $table->timestamps();

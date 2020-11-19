@@ -18,7 +18,7 @@ class CreateCastsTable extends Migration
             $table->integer('user_id');
             $table->integer('company_id');
             $table->string('name');
-            $table->tinyInteger('category');
+            $table->tinyInteger('category')->comment('1:役者、1:お笑い、2:歌手');
             $table->string('can_type')->comment("出来る事");
             $table->integer('price')->comment('料金');
             $table->integer('period')->comment('期間');

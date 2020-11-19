@@ -18,9 +18,9 @@ class CreateRequestTable extends Migration
             $table->integer('viewer_id');
             $table->integer('cast_id');
             $table->tinyInteger('status');
-            $table->tinyInteger('category');
-            $table->string('to_name');
-            $table->string('message');
+            $table->tinyInteger('category')->comment('1:祝い、1:応援、2:その他');
+            $table->string('to_name')->comment('言って欲しい名前');
+            $table->string('message')->comment('依頼内容');
             $table->timestamps();
         });
     }
