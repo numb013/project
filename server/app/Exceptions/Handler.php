@@ -3,7 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
-use Illuminate\Auth\AuthenticationException; //この追加を忘れないで
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -30,6 +30,8 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
+     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
+     *
      * @param  \Exception  $exception
      * @return void
      */
@@ -47,6 +49,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof TokenMismatchException) {
+            return redirect('/login')->with('message', 'セッションの有効期限が切れました。再度ログインしてください。');
+        }
+
         return parent::render($request, $exception);
     }
 
@@ -69,4 +75,6 @@ class Handler extends ExceptionHandler
 
         return redirect()->guest(route('login'));
     }
+
+
 }

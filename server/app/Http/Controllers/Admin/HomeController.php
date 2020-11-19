@@ -1,9 +1,5 @@
-// app/Http/Controllers/Admin/HomeController.php
-
 <?php
- 
-namespace App\Http\Controllers\Admin;  // Adminを追加
- 
+namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
  

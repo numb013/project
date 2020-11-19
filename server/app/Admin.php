@@ -1,12 +1,8 @@
-//Admin.php
 <?php
-
 namespace App;
-
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
-class Admin extends Authenticatable //ここを変更
+class Admin extends Authenticatable
 {
     use Notifiable;
 
@@ -16,9 +12,7 @@ class Admin extends Authenticatable //ここを変更
      * @var array
      */
     protected $fillable = [
-        'name', 
-        'email', 
-        'password',
+        'name', 'email', 'password',
     ];
 
     /**
@@ -27,7 +21,6 @@ class Admin extends Authenticatable //ここを変更
      * @var array
      */
     protected $hidden = [
-        'password', 
-        'remember_token',
+        'password', 'remember_token',
     ];
 }

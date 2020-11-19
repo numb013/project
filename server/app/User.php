@@ -3,13 +3,9 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject; // 追加
-use App\Notifications\CustomPasswordReset;
-use App\Notifications\VerifyEmail; // 追加
 
-class User extends Authenticatable implements JWTSubject, MustVerifyEmail
+class User extends Authenticatable
 {
     use Notifiable;
 
@@ -19,7 +15,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','avatar_filename',
     ];
 
     /**
@@ -30,29 +26,4 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     protected $hidden = [
         'password', 'remember_token',
     ];
-
-    // 追加
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    // 追加
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new CustomPasswordReset($token));
-    }
-
-    // 追加
-    public function sendEmailVerificationNotification()
-    {
-        $this->notify(new VerifyEmail);
-    }
-
-
 }
