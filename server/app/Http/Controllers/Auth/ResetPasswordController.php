@@ -4,14 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
-// 追加
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Contracts\Auth\PasswordBroker;
-use Illuminate\Http\JsonResponse;
 
 class ResetPasswordController extends Controller
 {
@@ -27,12 +19,6 @@ class ResetPasswordController extends Controller
     */
 
     use ResetsPasswords;
-    protected $redirectTo = '/home';
-
-    public function __construct()
-    {
-        $this->middleware('guest');
-    }
 
     /**
      * Where to redirect users after resetting their password.
@@ -41,49 +27,13 @@ class ResetPasswordController extends Controller
      */
     protected $redirectTo = '/home';
 
-    // 追加
-    public function reset(Request $request)
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-        $validate = $this->validator($request->all());
-
-        if ($validate->fails()) {
-            return new JsonResponse($validate->errors());
-        }
-        $response = $this->broker()->reset(
-            $this->credentials($request), function ($user, $password) {
-                $this->resetPassword($user, $password);
-            }
-        );
-
-        return $response == Password::PASSWORD_RESET
-                    ? $this->sendResetResponse($request, $response)
-                    : $this->sendResetFailedResponse($request, $response);
-    }
-
-    protected function resetPassword($user, $password)
-    {
-        $user->forceFill([
-            'password' => bcrypt($password),
-            'remember_token' => Str::random(60),
-        ])->save();
-    }
-
-    protected function sendResetResponse(Request $request, $response)
-    {
-        return new JsonResponse('Password Reset');
-    }
-
-    protected function sendResetFailedResponse(Request $request, $response)
-    {
-        return new JsonResponse($response);
-    }
-
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed|min:6',
-        ]);
+        $this->middleware('guest');
     }
 }

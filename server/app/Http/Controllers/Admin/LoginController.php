@@ -1,9 +1,5 @@
-// app/Http/Controllers/Admin/LoginController.php
-
 <?php
- 
-namespace App\Http\Controllers\Admin;  // Auth→Adminに変更
- 
+namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;

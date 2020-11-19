@@ -1,4 +1,3 @@
-// config/auth.php
 <?php
  
 return [
@@ -43,7 +42,7 @@ return [
         ],
  
         'api' => [
-            'driver' => 'jwt',
+            'driver' => 'token',
             'provider' => 'users',
         ],
         'user' => [

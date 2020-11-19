@@ -1,5 +1,3 @@
-// routes/web.php
-
 <?php
  
 /*
@@ -20,8 +18,10 @@ Auth::routes();
 | 1) User 認証不要
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () { return redirect('/home'); });
- 
+Route::get('/', function () {
+ return redirect('/home'); 
+});
+
 /*
 |--------------------------------------------------------------------------
 | 2) User ログイン後
@@ -29,6 +29,7 @@ Route::get('/', function () { return redirect('/home'); });
 */
 Route::group(['middleware' => 'auth:user'], function() {
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::post('/request_list/movie_upload', 'RequestListController@movieUpload');
 });
  
 /*
