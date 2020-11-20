@@ -24,6 +24,23 @@ class RequestListController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function List(Request $request)
+    {
+        $id = $request->input('id');
+
+Log::debug("333333333333333");
+        return view('/cast_admin/request_list/list');
+
+
+    }
+
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function movieUpload(Request $request)
     {
 

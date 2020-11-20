@@ -77,8 +77,7 @@ class Handler extends ExceptionHandler
         if (in_array('cast_admin', $exception->guards())) {
             return redirect()->guest(route('cast_admin.login'));
         }
-        Log::debug("fffffffffffff");
-        Log::debug($exception->guards());
+
         return redirect()->guest(route('login'));
     }
 

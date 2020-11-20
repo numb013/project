@@ -72,5 +72,6 @@ Route::group(['prefix' => 'cast_admin', 'middleware' => 'auth:cast_admin'], func
     Route::post('logout',   'CastAdmin\LoginController@logout')->name('cast_admin.logout');
     Route::get('home',      'CastAdmin\HomeController@index')->name('cast_admin.home');
     Route::post('request_list/movie_upload', 'RequestListController@movieUpload');
+    Route::get('request_list/list', 'RequestListController@List');
 	// Route::post('request_list/movie_upload', 'CastAdmin\RequestListController@movieUpload');
 });
