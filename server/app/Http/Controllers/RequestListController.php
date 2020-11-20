@@ -24,14 +24,21 @@ class RequestListController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function List(Request $request)
+    public function castAdminList(Request $request)
     {
         $id = $request->input('id');
-
-Log::debug("333333333333333");
         return view('/cast_admin/request_list/list');
+    }
 
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function castAdminDetail(Request $request)
+    {
+        $id = $request->input('id');
+        return view('/cast_admin/request_list/detail');
     }
 
 
@@ -41,12 +48,8 @@ Log::debug("333333333333333");
      *
      * @return \Illuminate\Http\Response
      */
-    public function movieUpload(Request $request)
+    public function castAdminMovieUpload(Request $request)
     {
-
-
-Log::debug("wwwwwwwwwwwww");
-
         // ① フォームの入力値を取得
         $inputs = \Request::all();
      
@@ -74,13 +77,8 @@ Log::debug("wwwwwwwwwwwww");
                 'public/files', $mes
             );
             $user = User::find(auth()->id());
-
-Log::debug("user");
-Log::debug($user);
-
             $user->avatar_filename = basename($filename);
             $user->save();
-     
             return redirect('/cast_admin/home')->with('success', '保存しました。'.$mes);
         } else {
             return redirect()
@@ -88,7 +86,6 @@ Log::debug($user);
                 ->withInput()
                 ->withErrors(['file' => 'アップロードされていないか不正なデータです。']);
         }
-
         return view('/cast_admin/home');
 
     }

@@ -14,7 +14,7 @@ class CastController extends Controller
      */
     public function index()
     {
-        //
+        return view('/cast_admin/cast/index');
     }
 
     /**
@@ -22,64 +22,26 @@ class CastController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function castAdminCreate()
     {
-        //
+        return view('/cast_admin/cast/detail');
     }
-
     /**
-     * Store a newly created resource in storage.
+     * Show the form for creating a new resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function castAdminEdit()
     {
-        //
+        return view('/cast_admin/cast/detail');
     }
-
     /**
-     * Display the specified resource.
+     * Show the form for creating a new resource.
      *
-     * @param  \App\Cast  $cast
      * @return \Illuminate\Http\Response
      */
-    public function show(Cast $cast)
+    public function castAdminDetail()
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Cast  $cast
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cast $cast)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Cast  $cast
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Cast $cast)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Cast  $cast
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Cast $cast)
-    {
-        //
+        return view('/cast_admin/cast/detail');
     }
 }

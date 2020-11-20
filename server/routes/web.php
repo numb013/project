@@ -69,9 +69,18 @@ Route::group(['prefix' => 'cast_admin'], function() {
 |--------------------------------------------------------------------------
 */
 Route::group(['prefix' => 'cast_admin', 'middleware' => 'auth:cast_admin'], function() {
-    Route::post('logout',   'CastAdmin\LoginController@logout')->name('cast_admin.logout');
-    Route::get('home',      'CastAdmin\HomeController@index')->name('cast_admin.home');
-    Route::post('request_list/movie_upload', 'RequestListController@movieUpload');
-    Route::get('request_list/list', 'RequestListController@List');
-	// Route::post('request_list/movie_upload', 'CastAdmin\RequestListController@movieUpload');
+    Route::post('logout', 'CastAdmin\LoginController@logout')->name('cast_admin.logout');
+    Route::get('home', 'CastAdmin\HomeController@index')->name('cast_admin.home');
+    //リクエスト
+    Route::post('request_list/movie_upload', 'RequestListController@castAdminMovieUpload');
+    Route::get('request_list/list', 'RequestListController@castAdminList');
+	Route::get('request_list/detail', 'RequestListController@castAdminDetail');
+
+	//プロフィール
+	Route::post('cast/create', 'CastController@castAdminCreate');
+	Route::post('cast/edit', 'CastController@castAdminEdit');
+	Route::get('cast/detail', 'CastController@castAdminDetail');
+
+
+
 });
