@@ -14,9 +14,10 @@ class RequestListController extends Controller
 {
 
 
-    // public function __construct() {
-    //     $this->middleware('auth');
-    // }
+    public function __construct() {
+        $this->middleware('auth');
+        $this->middleware('auth:cast_admin');  //変更
+    }
 
     /**
      * Display a listing of the resource.
@@ -27,7 +28,7 @@ class RequestListController extends Controller
     {
 
 
-
+Log::debug("wwwwwwwwwwwww");
 
         // ① フォームの入力値を取得
         $inputs = \Request::all();
@@ -63,7 +64,7 @@ Log::debug($user);
             $user->avatar_filename = basename($filename);
             $user->save();
      
-            return redirect('/home')->with('success', '保存しました。'.$mes);
+            return redirect('/cast_admin/home')->with('success', '保存しました。'.$mes);
         } else {
             return redirect()
                 ->back()
@@ -71,7 +72,7 @@ Log::debug($user);
                 ->withErrors(['file' => 'アップロードされていないか不正なデータです。']);
         }
 
-        return view('/home');
+        return view('/cast_admin/home');
 
     }
 }

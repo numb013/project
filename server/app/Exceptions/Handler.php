@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Log;
 
 class Handler extends ExceptionHandler
 {
@@ -73,6 +74,11 @@ class Handler extends ExceptionHandler
             return redirect()->guest(route('admin.login'));
         }
 
+        if (in_array('cast_admin', $exception->guards())) {
+            return redirect()->guest(route('cast_admin.login'));
+        }
+        Log::debug("fffffffffffff");
+        Log::debug($exception->guards());
         return redirect()->guest(route('login'));
     }
 

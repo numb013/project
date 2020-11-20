@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app_cast_admin')
 
 @section('content')
 <div class="container">
@@ -19,7 +19,7 @@
 
 <video src="https://d3el26csp1xekx.cloudfront.net/v/wm-KH4D17A8X.mp4" controls></video>
 
-{!! Form::open(['url' => '/request_list/movie_upload', 'method' => 'post', 'files' => true]) !!}
+{!! Form::open(['url' => 'cast_admin/request_list/movie_upload', 'method' => 'post', 'files' => true]) !!}
     {{--成功時のメッセージ--}}
     @if (session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>

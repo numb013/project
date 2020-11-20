@@ -17,8 +17,8 @@ class CreateViewersTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->string('name');
-            $table->dateTime('barthbay')->comment('誕生日');
-            $table->tinyInteger('sex')->comment('性別');
+            $table->dateTime('barthbay');
+            $table->tinyInteger('sex');
             $table->integer('coin');
             $table->timestamps();
         });
