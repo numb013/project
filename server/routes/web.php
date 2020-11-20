@@ -51,6 +51,37 @@ Route::group(['prefix' => 'admin'], function() {
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     Route::post('logout',   'Admin\LoginController@logout')->name('admin.logout');
     Route::get('home',      'Admin\HomeController@index')->name('admin.home');
+    //キャスト管理
+    Route::get('cast/list', 'CastController@adminList');
+    Route::post('cast/create', 'CastController@adminCreate');
+    Route::get('cast/edit', 'CastController@adminEdit');
+    Route::post('cast/update', 'CastController@adminUpdate');
+    Route::get('cast/detail', 'CastController@adminDetail');
+
+    //視聴者管理
+    Route::get('viewer/list', 'ViewerController@adminList');
+    Route::post('viewer/create', 'ViewerController@adminCreate');
+    Route::get('viewer/edit', 'ViewerController@adminEdit');
+    Route::post('viewer/update', 'ViewerController@adminUpdate');
+    Route::get('viewer/detail', 'ViewerController@adminDetail');
+
+    //リクエスト管理
+    Route::get('request_list/list', 'RequestListController@adminList');
+    Route::get('request_list/edit', 'RequestListController@adminEdit');
+    Route::post('request_list/update', 'RequestListController@adminUpdate');
+    Route::get('request_list/detail', 'RequestListController@adminDetail');
+
+    //お知らせ管理
+    Route::get('notice/list', 'NoticeController@adminList');
+    Route::get('notice/edit', 'NoticeController@adminEdit');
+    Route::post('notice/update', 'NoticeController@adminUpdate');
+    Route::get('notice/detail', 'NoticeController@adminDetail');
+
+    //支払い管理
+    Route::get('withdraw/list', 'CoinHistoryController@adminList');
+    Route::get('withdraw/edit', 'CoinHistoryController@adminEdit');
+    Route::post('withdraw/update', 'CoinHistoryController@adminUpdate');
+    Route::get('withdraw/detail', 'CoinHistoryController@adminDetail');
 });
 
 /*
@@ -65,7 +96,7 @@ Route::group(['prefix' => 'cast_admin'], function() {
 });
 /*
 |--------------------------------------------------------------------------
-| 4) Admin ログイン後
+| 4) CastAdmin ログイン後
 |--------------------------------------------------------------------------
 */
 Route::group(['prefix' => 'cast_admin', 'middleware' => 'auth:cast_admin'], function() {
@@ -76,11 +107,14 @@ Route::group(['prefix' => 'cast_admin', 'middleware' => 'auth:cast_admin'], func
     Route::get('request_list/list', 'RequestListController@castAdminList');
 	Route::get('request_list/detail', 'RequestListController@castAdminDetail');
 
-	//プロフィール
+	//キャストプロフィール
 	Route::post('cast/create', 'CastController@castAdminCreate');
 	Route::post('cast/edit', 'CastController@castAdminEdit');
+	Route::post('cast/update', 'CastController@castAdminUpdate');
 	Route::get('cast/detail', 'CastController@castAdminDetail');
 
-
+    //お知らせ管理
+    Route::get('notice/list', 'NoticeController@castAdminList');
+    Route::get('notice/detail', 'NoticeController@castAdminDetail');
 
 });
