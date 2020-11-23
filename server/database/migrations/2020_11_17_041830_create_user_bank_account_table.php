@@ -22,7 +22,7 @@ class CreateUserBankAccountTable extends Migration
             $table->string('account_no');
             $table->string('account_name');
             $table->integer('accouont_type');
-            $table->string('transfer_name');
+            $table->string('transfer_name')->nullable();
         });
     }
 

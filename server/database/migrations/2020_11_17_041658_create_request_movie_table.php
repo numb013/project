@@ -17,9 +17,9 @@ class CreateRequestMovieTable extends Migration
             $table->increments('id');
             $table->integer('request_id');
             $table->integer('hash_id');
-            $table->tinyInteger('status');
-            $table->tinyInteger('check_status');
-            $table->string('check_memo');
+            $table->tinyInteger('status')->defalt(0);
+            $table->tinyInteger('check_status')->nullable();
+            $table->string('check_memo')->nullable();
             $table->timestamps();
         });
     }

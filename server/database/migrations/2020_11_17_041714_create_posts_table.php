@@ -18,9 +18,9 @@ class CreatePostsTable extends Migration
             $table->integer('cast_id');
             $table->integer('hash_id');
             $table->tinyInteger('category');
-            $table->tinyInteger('status');
-            $table->tinyInteger('check_status');
-            $table->string('check_memo');
+            $table->tinyInteger('status')->defalt(0);
+            $table->tinyInteger('check_status')->nullable();
+            $table->string('check_memo')->nullable();
             $table->timestamps();
         });
     }

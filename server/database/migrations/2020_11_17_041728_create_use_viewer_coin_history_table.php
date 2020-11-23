@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAdminsTable extends Migration //ここを変更
+class CreateUseViewerCoinHistoryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateAdminsTable extends Migration //ここを変更
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) { //ここを変更
+        Schema::create('use_viewer_coin_history', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->rememberToken();
+            $table->integer('viewer_id');
+            $table->integer('cast_id');
+            $table->integer('request_id');
+            $table->integer('use_coin')->defalt(0);
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateAdminsTable extends Migration //ここを変更
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('use_viewer_coin_history');
     }
 }

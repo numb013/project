@@ -20,14 +20,14 @@ class CreateCompanyTable extends Migration
             $table->string('address');
             $table->integer('tel');
             $table->string('email');
-            $table->string('hp_url');
-            $table->string('contact_name');
-            $table->string('contact_tel');
-            $table->string('contact_mail');
-            $table->string('company_address');
-            $table->string('company_tel');
-            $table->integer('accouont_type');
-            $table->string('transfer_name');
+            $table->string('hp_url')->nullable();
+            $table->string('contact_name')->nullable();
+            $table->string('contact_tel')->nullable();
+            $table->string('contact_mail')->nullable();
+            $table->string('company_address')->nullable();
+            $table->string('company_tel')->nullable();
+            $table->integer('accouont_type')->nullable();
+            $table->string('transfer_name')->nullable();
         });
     }
 

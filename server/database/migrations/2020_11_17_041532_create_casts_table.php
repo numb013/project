@@ -18,14 +18,14 @@ class CreateCastsTable extends Migration
             $table->integer('user_id');
             $table->integer('company_id');
             $table->string('name');
-            $table->tinyInteger('category');
-            $table->string('can_type')->comment("出来る事");
+            $table->string('category')->nullable();
+            $table->tinyInteger('can_type')->nullable()->comment("出来る事");
             $table->integer('price')->comment('料金');
             $table->integer('period')->comment('期間');
-            $table->textarea('descript')->comment("説明");
-            $table->integer('total_post')->comment("動画数");
-            $table->integer('get_coin')->comment("獲得コイン");
-            $table->dobule('score')->comment("評価");
+            $table->string('descript')->comment("説明");
+            $table->integer('total_post')->defalt(0)->comment("動画数");
+            $table->integer('get_coin')->defalt(0)->comment("獲得コイン");
+            $table->double('score')->defalt(0)->comment("評価");
             $table->timestamps();
         });
     }

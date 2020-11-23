@@ -1,12 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use Log;
-
 use App\RequestList;
 use App\User;
 
@@ -32,28 +31,43 @@ class RequestListController extends Controller
      */
     public function adminList(Request $request)
     {
-        $column = '*';
-        if (!empty($request->input('name'))) {
-            $column.= ', CASE WHEN casts.name like "%' . $request->input('name') . '%" THEN 1 ELSE 0 END as name_hit';
-        }
-        $query = RequestList::select(DB::raw($column));
-        $query->join('user', 'users.id', '=', 'casts.user_id');
-        if ($request->input('name')) {
-            $query->where('cast.name', 'like BINARY', "%$request->input('name')%");
-        }
-        if ($request->input('category')) {
-            $query->whereIn('cast.category', $request->input('category'));
-        }
-        if (!empty($request->input('name'))) {
-            $query->orderBy('name_hit', 'desc');
-        }
-        $query->orderBy('score', 'desc');
-        $list = $query->get();
-        if ($list) {
-            $list = $list->toArray();
-        }
-        return view('/admin/request_list/detail', compact('list'));
+        Log::debug("bbbbbb");
+        $search_param = [];
+        $list = $this->requestSearch($search_param);
+        return view('/admin/request_list/list', compact('list'));
     }
+
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function adminSearch(Request $request)
+    {
+
+        Log::debug("adminSearchadminSearchadminSearch");
+        Log::debug($request);
+
+
+        $search_param['sort_type'] = $request->sort_type;
+        $search_param['free_word'] = $request->free_word;
+        $search_param['viewer_id'] = $request->viewer_id;
+        $search_param['category'] = $request->category;
+        $search_param['cast_id'] = $request->cast_id;
+        $search_param['to_name'] = $request->to_name;
+        $search_param['message'] = $request->message;
+
+        $list = $this->requestSearch($search_param);
+
+
+
+Log::debug("111111111111111");
+Log::debug($list);
+
+        return view('/admin/request_list/list', compact('list'));
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -103,6 +117,49 @@ class RequestListController extends Controller
     }
 
 
+    public function requestSearch($search_param)
+    {
+        $column = 'request_lists.*';
+        $column .= ', viewers.name as viewer_name, casts.name as cast_name';
+        if (!empty($search_param['free_word'])) {
+            $column.= ', CASE WHEN request_lists.message like "%' . $search_param['free_word'] . '%" THEN 1 ELSE 0 END as name_hit';
+        }
+        $query = RequestList::select(DB::raw($column));
+        $query->join('viewers', 'viewers.id', '=', 'request_lists.viewer_id');
+        $query->join('casts', 'casts.id', '=', 'request_lists.cast_id');
+
+        if (!empty($search_param['free_word'])) {
+            $query->where('request_lists.message', 'like BINARY', "%".$search_param['message']."%");
+        }
+        if (!empty($search_param['cast_id'])) {
+            $query->whereIn('request_lists.cast_id', $search_param['cast_id']);
+        }
+        if (!empty($search_param['status'])) {
+            $query->whereIn('request_lists.status', $search_param['status']);
+        }
+        if (!empty($search_param['category'])) {
+            $query->where('request_lists.category', $search_param['category']);
+        }
+
+        if (!empty($search_param['free_word'])) {
+            $query->orderBy('name_hit', 'desc');
+        }
+
+        $request_list = $query->get();
+        if ($request_list) {
+            $request_list = $request_list->toArray();
+        }
+        return $request_list;
+    }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -121,12 +178,13 @@ class RequestListController extends Controller
      */
     public function castAdminList(Request $request)
     {
-        $cast_id = $request->input('id');
-        $list = RequestList::select('*')->where('cast_id', $cast_id)->get();
+        $user = Auth::user();
+        // $cast_id = $request->input('id');
+        $list = RequestList::select('*')->get();
         if ($list) {
             $list = $list->toArray();
         }
-        return view('/cast_admin/request_list/list');
+        return view('/cast_admin/request_list/list', compact('list'));
     }
 
     /**
@@ -138,7 +196,7 @@ class RequestListController extends Controller
     {
         $request_id = $request->input('id');
         $detail = RequestList::select('*')->where('id', $request_id)->first();
-        return view('/cast_admin/request_list/detail', compact('cast_detail'));
+        return view('/cast_admin/request_list/detail', compact('detail'));
     }
 
     /**

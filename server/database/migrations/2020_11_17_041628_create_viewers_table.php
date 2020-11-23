@@ -19,7 +19,7 @@ class CreateViewersTable extends Migration
             $table->string('name');
             $table->dateTime('barthbay');
             $table->tinyInteger('sex');
-            $table->integer('coin');
+            $table->integer('coin')->defalt(0);
             $table->timestamps();
         });
     }

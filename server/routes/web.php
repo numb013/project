@@ -53,7 +53,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     Route::get('home',      'Admin\HomeController@index')->name('admin.home');
     //キャスト管理
     Route::get('cast/list', 'CastController@adminList');
-    Route::post('cast/create', 'CastController@adminCreate');
+    Route::post('cast/search', 'CastController@adminSearch');
+    Route::get('cast/create', 'CastController@adminCreate');
     Route::get('cast/edit', 'CastController@adminEdit');
     Route::post('cast/update', 'CastController@adminUpdate');
     Route::get('cast/detail', 'CastController@adminDetail');
@@ -67,6 +68,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
 
     //リクエスト管理
     Route::get('request_list/list', 'RequestListController@adminList');
+    Route::post('request_list/search', 'RequestListController@adminSearch');
     Route::get('request_list/edit', 'RequestListController@adminEdit');
     Route::post('request_list/update', 'RequestListController@adminUpdate');
     Route::get('request_list/detail', 'RequestListController@adminDetail');
@@ -106,10 +108,11 @@ Route::group(['prefix' => 'cast_admin', 'middleware' => 'auth:cast_admin'], func
     Route::post('request_list/movie_upload', 'RequestListController@castAdminMovieUpload');
     Route::get('request_list/list', 'RequestListController@castAdminList');
 	Route::get('request_list/detail', 'RequestListController@castAdminDetail');
-
+    Route::post('request_list/search', 'RequestListController@castAdminSearch');
+    
 	//キャストプロフィール
 	Route::post('cast/create', 'CastController@castAdminCreate');
-	Route::post('cast/edit', 'CastController@castAdminEdit');
+	Route::get('cast/edit', 'CastController@castAdminEdit');
 	Route::post('cast/update', 'CastController@castAdminUpdate');
 	Route::get('cast/detail', 'CastController@castAdminDetail');
 

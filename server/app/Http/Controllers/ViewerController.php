@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Viewer;
 use Illuminate\Http\Request;
-
+use DB;
+use Log;
 class ViewerController extends Controller
 {
     // const USER_CHECK = '1';
@@ -40,7 +41,7 @@ class ViewerController extends Controller
         $insert_data = [
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password);
+            'password' => bcrypt($request->password),
         ];
         Viewer::create($insert_data);
         return view('/admin/viewer/detail');
@@ -58,19 +59,18 @@ class ViewerController extends Controller
             $column.= ', CASE WHEN viewers.name like "%' . $request->input('name') . '%" THEN 1 ELSE 0 END as name_hit';
         }
         $query = Viewer::select(DB::raw($column));
-        $query->join('user', 'users.id', '=', 'viewers.user_id');
+        $query->join('users', 'users.id', '=', 'viewers.user_id');
         if ($request->input('name')) {
             $query->where('viewers.name', 'like BINARY', "%$request->input('name')%");
         }
         if (!empty($request->input('name'))) {
             $query->orderBy('name_hit', 'desc');
         }
-        $query->orderBy('score', 'desc');
         $viewer_list = $query->get();
         if ($viewer_list) {
             $viewer_list = $viewer_list->toArray();
         }
-        return view('/admin/viewer/detail', compact('viewer_list'));
+        return view('/admin/viewer/list', compact('viewer_list'));
     }
 
     /**
@@ -133,7 +133,7 @@ class ViewerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function adminDetail(Request $request)
+    public function castAdminDetail(Request $request)
     {
         $viewer_id = $request->input('id');
         $viewer_detail = Viewer::select('*')->where('id', $viewer_id)->first();

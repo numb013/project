@@ -13,7 +13,7 @@ class CreateCoinHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('coin_history', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('user_bank_id');
@@ -35,6 +35,6 @@ class CreateCoinHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admins');
+        Schema::dropIfExists('coin_history');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCoinHistoryTable extends Migration
+class CreateRequestListsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateCoinHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('coin_history', function (Blueprint $table) {
+        Schema::create('request_lists', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('viewer_id');
             $table->integer('cast_id');
-            $table->integer('request_id');
-            $table->integer('use_coin');
+            $table->tinyInteger('status');
+            $table->tinyInteger('category');
+            $table->string('to_name');
+            $table->string('message');
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ class CreateCoinHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coin_history');
+        Schema::dropIfExists('request_lists');
     }
 }
