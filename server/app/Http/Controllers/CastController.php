@@ -51,6 +51,17 @@ class CastController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function adminConfirm(Request $request)
+    {
+        $input_data = $request->all();
+        return view('/admin/cast/confirm', compact('input_data'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function adminCreateComplete(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -61,7 +72,8 @@ class CastController extends Controller
 
         // バリデーションエラーだった場合
         if ($validator->fails()) {
-            return view('/admin/cast/create');
+            $input_data = $request->all();
+            return view('/admin/cast/create', compact('input_data'));
         }
         $insert_data = [
             'name' => $request->name,
@@ -72,7 +84,6 @@ class CastController extends Controller
         return view('/admin/cast/detail');
     }
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -82,9 +93,6 @@ class CastController extends Controller
     {
         $search_param = [];
         $list = $this->castSearch($search_param);
-
-Log::debug($list);
-
         return view('/admin/cast/list', compact('list'));
     }
 

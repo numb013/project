@@ -17,6 +17,7 @@ class CreateNoticeTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->tinyInteger('type');
+            $table->tinyInteger('send_user_type');
             $table->tinyInteger('confirmed');
             $table->tinyInteger('category');
             $table->string('message');

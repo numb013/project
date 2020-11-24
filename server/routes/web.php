@@ -55,6 +55,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     Route::get('cast/list', 'CastController@adminList');
     Route::post('cast/search', 'CastController@adminSearch');
     Route::get('cast/create', 'CastController@adminCreate');
+    Route::get('cast/confirm', 'CastController@adminConfirm');
+    Route::get('cast/complete', 'CastController@adminComplete');
     Route::get('cast/edit', 'CastController@adminEdit');
     Route::post('cast/update', 'CastController@adminUpdate');
     Route::get('cast/detail', 'CastController@adminDetail');
@@ -77,13 +79,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     Route::get('notice/list', 'NoticeController@adminList');
     Route::get('notice/edit', 'NoticeController@adminEdit');
     Route::post('notice/update', 'NoticeController@adminUpdate');
-    Route::get('notice/detail', 'NoticeController@adminDetail');
+    Route::get('notice/create', 'NoticeController@adminCreate');
+    Route::get('notice/confirm', 'NoticeController@adminConfirm');
+    Route::get('notice/complete', 'NoticeController@adminComplete');
 
     //支払い管理
-    Route::get('withdraw/list', 'CoinHistoryController@adminList');
-    Route::get('withdraw/edit', 'CoinHistoryController@adminEdit');
-    Route::post('withdraw/update', 'CoinHistoryController@adminUpdate');
-    Route::get('withdraw/detail', 'CoinHistoryController@adminDetail');
+    Route::get('withdraw/list', 'WithdrawController@adminList');
+    Route::post('withdraw/search', 'WithdrawController@adminSearch');
+    Route::get('withdraw/detail', 'WithdrawController@adminDetail');
 });
 
 /*

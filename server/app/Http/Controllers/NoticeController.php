@@ -28,24 +28,32 @@ class NoticeController extends Controller
      */
     public function adminCreate(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'email' => 'required|email|max:100',
-            'password' => 'required',
-        ]);
-
-        // バリデーションエラーだった場合
-        if ($validator->fails()) {
-            return view('/admin/notice/create');
-        }
-        $insert_data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password);
-        ];
-        Notice::create($insert_data);
-        return view('/admin/notice/detail');
+        return view('/admin/notice/create');
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function adminConfirm(Request $request)
+    {
+        $input_data = $request->all();
+        return view('/admin/notice/confirm', compact($input_data));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function adminComplete(Request $request)
+    {
+        Notice::create($request->all());
+        return view('/admin/notice/list');
+    }
+
+
 
     /**
      * Show the form for creating a new resource.

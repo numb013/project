@@ -41,7 +41,6 @@
                                 </div>
 
                                 <div class="form-group">
-                                    {!! Form::open(['url' => 'cast_admin/request_list/movie_upload', 'method' => 'post', 'files' => true]) !!}
                                         {{--成功時のメッセージ--}}
                                         @if (session('success'))
                                         <div class="alert alert-success">{{ session('success') }}</div>
@@ -60,7 +59,6 @@
                                             {!! Form::label('file', '動画アップロード', ['class' => 'control-label']) !!}
                                             {!! Form::file('file') !!}
                                         </div>
-                                    {!! Form::close() !!}
                                 </div>
 
                             </div>
@@ -74,8 +72,14 @@
                                         </label>
                                     @endforeach
                                 </div>
-
-
+                                <div class="form-group">
+                                    <label>権限</label>
+                                    <select name="authority" class="form-control">
+                                        @foreach (config('const.authority') as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="form-group">
                                     <label>期間</label>
                                     <select name="period" class="form-control">
@@ -84,17 +88,10 @@
                                         @endforeach
                                     </select>
                                 </div>
-
-
-
                                 <div class="form-group">
                                     <label>説明</label>
                                     <textarea name="descript" class="form-control">{{ old('descript') }}</textarea>
                                 </div>
-
-
-
-
                                 <input class="btn btn-primary" type="submit" value="送信" />
                             </div>
                         </form>
