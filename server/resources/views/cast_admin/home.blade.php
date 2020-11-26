@@ -14,53 +14,38 @@
                                 </span>
                                 <div class="chat-body clearfix">
                                     <div class="header">
-                                        <strong class="primary-font">名前 : </strong>
+                                        <strong class="primary-font">名前 : {{ $cast['name'] }}</strong>
                                     </div>
                                     <div class="header">
-                                        <strong class="primary-font">獲得コイン : </strong>
+                                        <strong class="primary-font">獲得コイン : {{ $cast['get_coin'] }}</strong>
                                     </div>
                                     <div class="header">
-                                        <strong class="primary-font">設定料金 : </strong>
+                                        <strong class="primary-font">設定料金 : {{ $cast['price'] }}</strong>
                                     </div>
                                     <div class="header">
-                                        <strong class="primary-font">リクエスト総数 : </strong>
+                                        <strong class="primary-font">リクエスト総数 : {{ $cast['total_post'] }}</strong>
                                     </div>
                                     <div class="header">
-                                        <strong class="primary-font">期間 : </strong>
+                                        <strong class="primary-font">期間 : {{ $cast['period'] }}</strong>
                                     </div>
                                     <p>
-                                        Lorem ipsum dolor sit amet, <br>consectetur adipiscing elit. Curabitur bibendum
-                                        ornare dolor, quis ullamcorper
+                                    {!! $cast['descript'] !!}
                                     </p>
                                 </div>
                             </li>
                         </ul>
-                        <a href="/cast_admin/cast/edit" class="btn btn-default btn-block">プロフィール編集</a>
+                        <a href="/cast_admin/cast/edit?id={{ $cast['id'] }}" class="btn btn-default btn-block">プロフィール編集</a>
                         <br>
                         <div class="list-group">
                             <p>やる事リスト</p>
+                            @foreach ($request_list as $key => $value)
                             <a href="#" class="list-group-item">
-                                <i class="fa fa-comment fa-fw"></i> New Comment
-                                <span class="pull-right text-muted small"><em>4 minutes ago</em></span>
+                                <i class="fa fa-comment fa-fw"></i> {{ $value['user_name'] }}
+                                <span class="pull-right text-muted small"><em>{{ $value['created_at'] }}</em></span>
                             </a>
-                            <a href="#" class="list-group-item">
-                                <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                <span class="pull-right text-muted small"><em>12 minutes ago</em></span>
-                            </a>
-                            <a href="#" class="list-group-item">
-                                <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                <span class="pull-right text-muted small"><em>12 minutes ago</em></span>
-                            </a>
-                            <a href="#" class="list-group-item">
-                                <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                <span class="pull-right text-muted small"><em>12 minutes ago</em></span>
-                            </a>
-                            <a href="#" class="list-group-item">
-                                <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                <span class="pull-right text-muted small"><em>12 minutes ago</em></span>
-                            </a>
+                            @endforeach
                         </div>
-                        <a href="#" class="btn btn-default btn-block">すべて見る</a>
+                        <a href="/cast_admin/request_list/list?id={{ $cast['id'] }}" class="btn btn-default btn-block">すべて見る</a>
                         <!-- /.list-group -->
                     </div>
                 </div>
