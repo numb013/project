@@ -34,7 +34,6 @@
                                     @endforeach
                                 </div>
                                 <button type="submit" class="btn btn-default">送信</button>
-                                <button type="reset" class="btn btn-default">リセット</button>
                             </div>
                         </form>
                         <!-- /.col-lg-6 (nested) -->
@@ -73,7 +72,7 @@
                                                 <td>{{ $value['id'] }}</td>
                                                 <td>{{ $value['name'] }}</td>
                                                 <td>{{ $value['get_coin'] }}</td>
-                                                <td><a href="/admin/cast/detail?id={{ $value['id'] }}">編集</a></td>
+                                                <td><a href="/admin/cast/detail?id={{ $value['id'] }}">詳細</a></td>
                                             </tr>
                                         @endforeach
 

@@ -17,6 +17,7 @@
                     <i class="fa fa-bar-chart-o fa-fw"></i>
                     未完了リクエスト
                     <a href="/admin/cast/list">戻る</a>
+                    <a href="/admin/cast/edit?id=1">編集</a>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">

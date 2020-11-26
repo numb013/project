@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Cast;
+
 use App\User;
 use App\Notice;
 use App\CastAdmin;
+use App\Company;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use DB;
 use Log;
 
@@ -43,7 +45,9 @@ class CastController extends Controller
      */
     public function adminCreate(Request $request)
     {
-        return view('/admin/cast/create');
+        $company = Company::select('id', 'name')->where('id', '>', 0)->get()->toArray();
+        Log::debug($company);
+        return view('/admin/cast/create', compact('company'));
     }
 
     /**
@@ -53,6 +57,12 @@ class CastController extends Controller
      */
     public function adminConfirm(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'email' => 'required|email|max:100',
+            'password' => 'required',
+        ])->validate();
+
         $input_data = $request->all();
         return view('/admin/cast/confirm', compact('input_data'));
     }
@@ -62,26 +72,29 @@ class CastController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function adminCreateComplete(Request $request)
+    public function adminComplete(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'email' => 'required|email|max:100',
-            'password' => 'required',
+        $insert_data = Arr::only($request->all(), [
+            'name', 
+            'authority',
+            'company_id',
+            'category',
+            'can_type',
+            'price',
+            'period',
+            'descript',
+            'total_post',
+            'get_coin',
+            'get_coin',
+            'score',
+            'email', 
+            'password',
         ]);
+        $insert_data['password'] = bcrypt($insert_data['password']);
+        $insert_data['category'] = implode( ",", $request->genre );
 
-        // バリデーションエラーだった場合
-        if ($validator->fails()) {
-            $input_data = $request->all();
-            return view('/admin/cast/create', compact('input_data'));
-        }
-        $insert_data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ];
         CastAdmin::create($insert_data);
-        return view('/admin/cast/detail');
+        return redirect('/admin/cast/list');
     }
 
     /**
@@ -130,7 +143,7 @@ class CastController extends Controller
     public function adminDetail(Request $request)
     {
         $cast_id = $request->input('id');
-        $cast_detail = Cast::select('*')->where('id', $cast_id)->first();
+        $cast_detail = CastAdmin::select('*')->where('id', $cast_id)->first();
         return view('/admin/cast/detail', compact('cast_detail'));
     }
 
@@ -142,8 +155,10 @@ class CastController extends Controller
     public function adminEdit(Request $request)
     {
         $cast_id = $request->input('id');
-        $cast_detail = Cast::select('*')->where('id', $cast_id)->first();
-        return view('/admin/cast/detail', compact('cast_detail'));
+        $detail = CastAdmin::select('*')->where('id', $cast_id)->first();
+        $company = Company::select('id', 'name')->where('id', '>', 0)->get()->toArray();
+
+        return view('/admin/cast/edit', compact('detail', 'company'));
     }
 
     /**
@@ -155,17 +170,26 @@ class CastController extends Controller
     {
         $cast_id = $request->id;
         $update_data = Arr::only($request->all(), [
-            'user_id',
+            'name', 
+            'authority',
             'company_id',
-            'name',
             'category',
             'can_type',
+            'price',
             'period',
             'descript',
             'total_post',
+            'get_coin',
+            'get_coin',
             'score',
+            'email', 
+            'password',
         ]);
-        Cast::where('user_id', $cast_id)->update($update_data);
+        $insert_data['password'] = bcrypt($insert_data['password']);
+        $insert_data['category'] = implode( ",", $request->genre );
+
+
+        CastAdmin::where('user_id', $cast_id)->update($update_data);
 
         return view('/admin/cast/detail?id='.$cast_id);
     }
@@ -176,56 +200,54 @@ class CastController extends Controller
     {
         $column = '*';
         if (!empty($search_param['free_word'])) {
-            $column.= ', CASE WHEN casts.name like "%' . $search_param['free_word']. '%" THEN 1 ELSE 0 END as name_hit';
+            $column.= ', CASE WHEN cast_admins.name like "%' . $search_param['free_word']. '%" THEN 1 ELSE 0 END as name_hit';
         }
-        $query = Cast::select(DB::raw($column));
-        $query->join('users', 'users.id', '=', 'casts.user_id');
-
+        $query = CastAdmin::select(DB::raw($column));
 
         if (!empty($search_param['free_word'])) {
-            $query->where('casts.name', 'like BINARY', "%".$search_param['free_word']."%");
+            $query->where('cast_admins.name', 'like BINARY', "%".$search_param['free_word']."%");
         }
         if (!empty($search_param['category'])) {
-            $query->whereIn('casts.category', $search_param['category']);
+            $query->whereIn('cast_admins.category', $search_param['category']);
         }
         if (!empty($search_param['status'])) {
-            $query->whereIn('casts.status', $search_param['status']);
+            $query->whereIn('cast_admins.status', $search_param['status']);
         }
         if (!empty($search_param['company_id'])) {
-            $query->where('casts.company_id', $search_param['company_id']);
+            $query->where('cast_admins.company_id', $search_param['company_id']);
         }
 
 
         if (!empty($search_param["min_price"]) && empty($search_param["max_price"])) {
-            $query->where('casts.price', '<=', $search_param["min_price"]);
+            $query->where('cast_admins.price', '<=', $search_param["min_price"]);
         }
         if (empty($search_param["min_price"]) && !empty($search_param["max_price"])) {
-            $query->where('casts.price', '>=', $search_param["max_price"]);
+            $query->where('cast_admins.price', '>=', $search_param["max_price"]);
         }
         if (!empty($search_param["min_price"]) && !empty($search_param["max_price"])) {
-            $query->whereBetween('casts.price', [$search_param["min_price"], $search_param["max_price"]]);
+            $query->whereBetween('cast_admins.price', [$search_param["min_price"], $search_param["max_price"]]);
         }
 
 
         if (!empty($search_param["min_total_post"]) && empty($search_param["max_total_post"])) {
-            $query->where('casts.total_post', '<=', $search_param["min_total_post"]);
+            $query->where('cast_admins.total_post', '<=', $search_param["min_total_post"]);
         }
         if (empty($search_param["min_total_post"]) && !empty($search_param["max_total_post"])) {
-            $query->where('casts.total_post', '>=', $search_param["max_total_post"]);
+            $query->where('cast_admins.total_post', '>=', $search_param["max_total_post"]);
         }
         if (!empty($search_param["min_total_post"]) && !empty($search_param["max_total_post"])) {
-            $query->whereBetween('casts.total_post', [$search_param["min_total_post"], $search_param["max_total_post"]]);
+            $query->whereBetween('cast_admins.total_post', [$search_param["min_total_post"], $search_param["max_total_post"]]);
         }
 
 
         if (!empty($search_param["min_get_coin"]) && empty($search_param["max_get_coin"])) {
-            $query->where('casts.get_coin', '<=', $search_param["min_get_coin"]);
+            $query->where('cast_admins.get_coin', '<=', $search_param["min_get_coin"]);
         }
         if (empty($search_param["min_get_coin"]) && !empty($search_param["max_get_coin"])) {
-            $query->where('casts.get_coin', '>=', $search_param["max_get_coin"]);
+            $query->where('cast_admins.get_coin', '>=', $search_param["max_get_coin"]);
         }
         if (!empty($search_param["min_get_coin"]) && !empty($search_param["max_get_coin"])) {
-            $query->whereBetween('casts.get_coin', [$search_param["min_get_coin"], $search_param["max_get_coin"]]);
+            $query->whereBetween('cast_admins.get_coin', [$search_param["min_get_coin"], $search_param["max_get_coin"]]);
         }
 
         if (!empty($search_param['free_word'])) {

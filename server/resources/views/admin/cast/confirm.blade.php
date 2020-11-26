@@ -50,20 +50,25 @@
                                                 <td>{{ $input_data['price'] }}</td>
                                             </tr>
                                             <tr>
-                                                <td>画像 </td>
-                                                <td>{{ $input_data['images'] }}</td>
+                                                <td>権限</td>
+                                                <td>{{ config('const.authority')[$input_data['authority']] }}</td>
                                             </tr>
+
                                             <tr>
                                                 <td>ジャンル </td>
-                                                <td>{{ $input_data['genre_word'] }}</td>
+                                                <td>
+                                                    @foreach ($input_data['genre'] as $key => $value)
+                                                        {{ config('const.genre')[$value] }}
+                                                    @endforeach
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>期間 </td>
-                                                <td>{{ $input_data['period_word'] }}</td>
+                                                <td>{{ config('const.period')[$input_data['period']] }}</td>
                                             </tr>
                                             <tr>
                                                 <td>説明 </td>
-                                                <td>{{ $input_data['message'] }}</td>
+                                                <td>{{ $input_data['descript'] }}</td>
                                             </tr>
                                             
                                         </tbody>
@@ -73,8 +78,10 @@
                                 <input type="hidden" name="email" value="{{ $input_data['email'] }}">
                                 <input type="hidden" name="password" value="{{ $input_data['password'] }}">
                                 <input type="hidden" name="price" value="{{ $input_data['price'] }}">
-                                <input type="hidden" name="images" value="{{ $input_data['images'] }}">
-                                <input type="hidden" name="genre" value="{{ $input_data['genre'] }}">
+                                <input type="hidden" name="authority" value="{{ $input_data['authority'] }}">
+                                @foreach ($input_data['genre'] as $key => $value)
+                                    <input type="hidden" name="genre[]" value="{{ $value }}">
+                                @endforeach
                                 <input type="hidden" name="period" value="{{ $input_data['period'] }}">
                                 <input type="hidden" name="descript" value="{{ $input_data['descript'] }}">
                                 <input class="btn btn-primary" type="submit" value="送信" />

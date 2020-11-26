@@ -33,11 +33,7 @@
                                         </label>
                                     @endforeach
                                 </div>
-
-
-<!--                                 <button type="submit" class="btn btn-default">Submit Button</button>
-                                <button type="reset" class="btn btn-default">Reset Button</button> -->
-                                <input class="btn btn-primary" type="submit" value="送信" />
+                                <button type="submit" class="btn btn-default">送信</button>
                             </div>
                         </form>
                         <!-- /.col-lg-6 (nested) -->
@@ -65,21 +61,24 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th>Amount</th>
+                                        <th>キャスト名</th>
+                                        <th>視聴者名</th>
+                                        <th>ステータス</th>
+                                        <th>投稿日</th>
+                                        <th>確認</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($list as $key => $value)
                                             <tr>
                                                 <td>{{ $value['id'] }}</td>
-                                                <td>{{ $value['viewer_name'] }}</td>
                                                 <td>{{ $value['cast_name'] }}</td>
-                                                <td><a href="/admin/request_list/detail?id={{ $value['id'] }}">編集</a></td>
+                                                <td>{{ $value['viewer_name'] }}</td>
+                                                <td>{{ config('const.request_status')[$value['status']] }}</td>
+                                                <td>{{ $value["created_at"] }}</td>
+                                                <td><a href="/admin/request_list/edit?id={{ $value['id'] }}">検閲</a></td>
                                             </tr>
                                         @endforeach
-
                                     </tbody>
                                 </table>
                             </div>

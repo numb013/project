@@ -46,54 +46,54 @@ class WithdrawController extends Controller
     {
         $column = '*';
         if (!empty($search_param['free_word'])) {
-            $column.= ', CASE WHEN casts.name like "%' . $search_param['free_word']. '%" THEN 1 ELSE 0 END as name_hit';
+            $column.= ', CASE WHEN cast_admins.name like "%' . $search_param['free_word']. '%" THEN 1 ELSE 0 END as name_hit';
         }
         $query = CoinHistory::select(DB::raw($column));
-        $query->join('users', 'users.id', '=', 'casts.user_id');
+        $query->join('users', 'users.id', '=', 'cast_admins.user_id');
 
         if (!empty($search_param['free_word'])) {
-            $query->where('casts.name', 'like BINARY', "%".$search_param['free_word']."%");
+            $query->where('cast_admins.name', 'like BINARY', "%".$search_param['free_word']."%");
         }
         if (!empty($search_param['category'])) {
-            $query->whereIn('casts.category', $search_param['category']);
+            $query->whereIn('cast_admins.category', $search_param['category']);
         }
         if (!empty($search_param['status'])) {
-            $query->whereIn('casts.status', $search_param['status']);
+            $query->whereIn('cast_admins.status', $search_param['status']);
         }
         if (!empty($search_param['company_id'])) {
-            $query->where('casts.company_id', $search_param['company_id']);
+            $query->where('cast_admins.company_id', $search_param['company_id']);
         }
 
         if (!empty($search_param["min_price"]) && empty($search_param["max_price"])) {
-            $query->where('casts.price', '<=', $search_param["min_price"]);
+            $query->where('cast_admins.price', '<=', $search_param["min_price"]);
         }
         if (empty($search_param["min_price"]) && !empty($search_param["max_price"])) {
-            $query->where('casts.price', '>=', $search_param["max_price"]);
+            $query->where('cast_admins.price', '>=', $search_param["max_price"]);
         }
         if (!empty($search_param["min_price"]) && !empty($search_param["max_price"])) {
-            $query->whereBetween('casts.price', [$search_param["min_price"], $search_param["max_price"]]);
+            $query->whereBetween('cast_admins.price', [$search_param["min_price"], $search_param["max_price"]]);
         }
 
 
         if (!empty($search_param["min_total_post"]) && empty($search_param["max_total_post"])) {
-            $query->where('casts.total_post', '<=', $search_param["min_total_post"]);
+            $query->where('cast_admins.total_post', '<=', $search_param["min_total_post"]);
         }
         if (empty($search_param["min_total_post"]) && !empty($search_param["max_total_post"])) {
-            $query->where('casts.total_post', '>=', $search_param["max_total_post"]);
+            $query->where('cast_admins.total_post', '>=', $search_param["max_total_post"]);
         }
         if (!empty($search_param["min_total_post"]) && !empty($search_param["max_total_post"])) {
-            $query->whereBetween('casts.total_post', [$search_param["min_total_post"], $search_param["max_total_post"]]);
+            $query->whereBetween('cast_admins.total_post', [$search_param["min_total_post"], $search_param["max_total_post"]]);
         }
 
 
         if (!empty($search_param["min_get_coin"]) && empty($search_param["max_get_coin"])) {
-            $query->where('casts.get_coin', '<=', $search_param["min_get_coin"]);
+            $query->where('cast_admins.get_coin', '<=', $search_param["min_get_coin"]);
         }
         if (empty($search_param["min_get_coin"]) && !empty($search_param["max_get_coin"])) {
-            $query->where('casts.get_coin', '>=', $search_param["max_get_coin"]);
+            $query->where('cast_admins.get_coin', '>=', $search_param["max_get_coin"]);
         }
         if (!empty($search_param["min_get_coin"]) && !empty($search_param["max_get_coin"])) {
-            $query->whereBetween('casts.get_coin', [$search_param["min_get_coin"], $search_param["max_get_coin"]]);
+            $query->whereBetween('cast_admins.get_coin', [$search_param["min_get_coin"], $search_param["max_get_coin"]]);
         }
 
         if (!empty($search_param['free_word'])) {

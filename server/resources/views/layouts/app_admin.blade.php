@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Startmin - Bootstrap Admin Theme</title>
+        <title>VEAMER</title>
         <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
 
         <!-- Custom CSS -->
@@ -37,7 +37,7 @@
             <!-- Navigation -->
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/admin">Startmin</a>
+                    <a class="navbar-brand" href="/admin">VEAMER</a>
                 </div>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -88,6 +88,9 @@
                             </li>
                             <li>
                                 <a href="/admin/company/list" class=""><i class="fa fa-dashboard fa-fw"></i>事務所</a>
+                            </li>
+                            <li>
+                                <a href="/admin/notice/list" class=""><i class="fa fa-dashboard fa-fw"></i>お知らせ</a>
                             </li>
                             <li>
                                 <a href="#">

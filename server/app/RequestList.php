@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class RequestList extends Model
 {
-    use Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -20,5 +18,9 @@ class RequestList extends Model
         'category',
         'to_name',
         'message',
+        'created_at',
+    ];
+    protected $dates = [
+        'created_at'
     ];
 }

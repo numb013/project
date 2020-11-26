@@ -55,8 +55,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     Route::get('cast/list', 'CastController@adminList');
     Route::post('cast/search', 'CastController@adminSearch');
     Route::get('cast/create', 'CastController@adminCreate');
-    Route::get('cast/confirm', 'CastController@adminConfirm');
-    Route::get('cast/complete', 'CastController@adminComplete');
+    Route::post('cast/confirm', 'CastController@adminConfirm');
+    Route::post('cast/complete', 'CastController@adminComplete');
     Route::get('cast/edit', 'CastController@adminEdit');
     Route::post('cast/update', 'CastController@adminUpdate');
     Route::get('cast/detail', 'CastController@adminDetail');
@@ -77,6 +77,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
 
     //お知らせ管理
     Route::get('notice/list', 'NoticeController@adminList');
+    Route::post('notice/search', 'NoticeController@adminSearch');
     Route::get('notice/edit', 'NoticeController@adminEdit');
     Route::post('notice/update', 'NoticeController@adminUpdate');
     Route::get('notice/create', 'NoticeController@adminCreate');

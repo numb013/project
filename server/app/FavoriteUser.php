@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class FavoriteUser extends Model
 {
-    use Notifiable;
 
     /**
      * The attributes that are mass assignable.

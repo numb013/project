@@ -12,7 +12,20 @@ class CastAdmin extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 
+        'authority',
+        'company_id',
+        'category',
+        'can_type',
+        'price',
+        'period',
+        'descript',
+        'total_post',
+        'get_coin',
+        'get_coin',
+        'score',
+        'email', 
+        'password',
     ];
 
     /**

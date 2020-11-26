@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProfileImage extends Model
 {
-    use Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *

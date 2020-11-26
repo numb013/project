@@ -16,7 +16,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <form role="form" method="post" action="{{action('CastController@adminSearch')}}" class="form">
+                        <form role="form" method="post" action="{{action('NoticeController@adminConfirm')}}" class="form">
                             {{ csrf_field() }}
                             <div class="col-lg-12">
                                 <div data-toggle='buttons' id='menu' class="form-group">
@@ -49,26 +49,4 @@
         <!-- /.col-lg-12 -->
     </div>
 </div>
-<link rel="stylesheet" href="{{ asset('css/rSlider.min.css') }}">
-<script src="{{ asset('js/rSlider.min.js') }}"></script>
-<script>
-    (function () {
-        'use strict';
-        var init = function () {
-            var slider = new rSlider({
-                target: '#slider',
-                values: {min: 0, max: 100000},
-                step: 300,
-                range: false,
-                set: [0, 3000],
-                scale: true,
-                labels: false,
-                onChange: function (vals) {
-                    console.log(vals);
-                }
-            });
-        };
-        window.onload = init;
-    })();
-</script>
 @endsection

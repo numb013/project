@@ -90,4 +90,5 @@
     }
   }
   elem.addEventListener('input', rangeValue(elem, target));
-</script>@endsection
+</script>
+@endsection

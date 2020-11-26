@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Startmin - Bootstrap Admin Theme</title>
+        <title>VEAMER</title>
         <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
 
         <!-- Custom CSS -->
@@ -78,16 +78,10 @@
                     <div class="sidebar-nav navbar-collapse">
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a href="/cast_admin/request_list/list" class=""><i class="fa fa-dashboard fa-fw"></i>リクエスト</a>
-                            </li>
-                            <li>
                                 <a href="/cast_admin/cast/edit" class=""><i class="fa fa-dashboard fa-fw"></i>キャスト</a>
                             </li>
                             <li>
-                                <a href="/cast_admin/viewer/list" class=""><i class="fa fa-dashboard fa-fw"></i>視聴者</a>
-                            </li>
-                            <li>
-                                <a href="/cast_admin/company/list" class=""><i class="fa fa-dashboard fa-fw"></i>事務所</a>
+                                <a href="/cast_admin/request_list/list" class=""><i class="fa fa-dashboard fa-fw"></i>リクエスト</a>
                             </li>
                             <li>
                                 <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>支払い管理<span class="fa arrow"></span></a>

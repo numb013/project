@@ -34,11 +34,7 @@
                                         </label>
                                     @endforeach
                                 </div>
-
-
-<!--                                 <button type="submit" class="btn btn-default">送信</button>
-                                <button type="reset" class="btn btn-default">Reset Button</button> -->
-                                <input class="btn btn-primary" type="submit" value="送信" />
+                                <button type="submit" class="btn btn-default">送信</button>
                             </div>
                         </form>
                         <!-- /.col-lg-6 (nested) -->

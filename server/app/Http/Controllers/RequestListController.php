@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Arr;
 use DB;
 use Log;
 use App\RequestList;
@@ -45,11 +46,6 @@ class RequestListController extends Controller
      */
     public function adminSearch(Request $request)
     {
-
-        Log::debug("adminSearchadminSearchadminSearch");
-        Log::debug($request);
-
-
         $search_param['sort_type'] = $request->sort_type;
         $search_param['free_word'] = $request->free_word;
         $search_param['viewer_id'] = $request->viewer_id;
@@ -59,11 +55,6 @@ class RequestListController extends Controller
         $search_param['message'] = $request->message;
 
         $list = $this->requestSearch($search_param);
-
-
-
-Log::debug("111111111111111");
-Log::debug($list);
 
         return view('/admin/request_list/list', compact('list'));
     }
@@ -89,8 +80,16 @@ Log::debug($list);
     public function adminEdit(Request $request)
     {
         $request_list_id = $request->input('id');
-        $detail = RequestList::select('*')->where('id', $request_list_id)->first();
-        return view('/admin/request_list/detail', compact('detail'));
+
+        $column = 'request_lists.*';
+        $column .= ', viewers.name as viewer_name, cast_admins.name as cast_name';
+        $query = RequestList::select(DB::raw($column));
+        $query->join('viewers', 'viewers.id', '=', 'request_lists.viewer_id');
+        $query->join('cast_admins', 'cast_admins.id', '=', 'request_lists.cast_id');
+        $query->where('request_lists.id', $request_list_id);
+        $detail = $query->first();
+
+        return view('/admin/request_list/edit', compact('detail'));
     }
 
     /**
@@ -102,31 +101,33 @@ Log::debug($list);
     {
         $request_list_id = $request->id;
         $update_data = Arr::only($request->all(), [
-            'user_id',
-            'company_id',
-            'name',
+            'viewer_id',
+            'cast_id',
+            'status',
             'category',
-            'can_type',
-            'period',
-            'descript',
-            'total_post',
-            'score',
+            'to_name',
+            'message',
         ]);
-        RequestList::where('user_id', $request_list_id)->update($update_data);
-        return view('/admin/request_list/detail', compact('cast_detail'));
+        RequestList::where('id', $request_list_id)->update($update_data);
+
+        $search_param = [];
+        $list = $this->requestSearch($search_param);
+        return view('/admin/request_list/list', compact('list'));
     }
 
 
     public function requestSearch($search_param)
     {
         $column = 'request_lists.*';
-        $column .= ', viewers.name as viewer_name, casts.name as cast_name';
+        $column .= ', request_movie.hash_id as request_movie_hash_id, request_movie.status as request_movie_status, check_status, check_memo';
+        $column .= ', viewers.name as viewer_name, cast_admins.name as cast_name';
         if (!empty($search_param['free_word'])) {
             $column.= ', CASE WHEN request_lists.message like "%' . $search_param['free_word'] . '%" THEN 1 ELSE 0 END as name_hit';
         }
         $query = RequestList::select(DB::raw($column));
         $query->join('viewers', 'viewers.id', '=', 'request_lists.viewer_id');
-        $query->join('casts', 'casts.id', '=', 'request_lists.cast_id');
+        $query->join('cast_admins', 'cast_admins.id', '=', 'request_lists.cast_id');
+        $query->leftjoin('request_movie', 'request_movie.request_id', '=', 'request_lists.id');
 
         if (!empty($search_param['free_word'])) {
             $query->where('request_lists.message', 'like BINARY', "%".$search_param['message']."%");
@@ -149,6 +150,12 @@ Log::debug($list);
         if ($request_list) {
             $request_list = $request_list->toArray();
         }
+
+
+Log::debug("ssssssssssssssss");
+Log::debug($request_list);
+
+
         return $request_list;
     }
 

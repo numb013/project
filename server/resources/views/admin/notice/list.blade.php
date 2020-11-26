@@ -51,7 +51,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-bar-chart-o fa-fw"></i>未完了リクエスト
-                    <a href="/admin/cast/create">キャスト新規作成</a>
+                    <a href="/admin/notice/create">新規作成</a>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
