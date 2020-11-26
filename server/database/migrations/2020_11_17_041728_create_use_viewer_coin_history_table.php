@@ -14,8 +14,8 @@ class CreateUseViewerCoinHistoryTable extends Migration
     public function up()
     {
         Schema::create('use_viewer_coin_history', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('viewer_id');
+            $table->bigIncrements('id');
+            $table->integer('user_id');
             $table->integer('cast_id');
             $table->integer('request_id');
             $table->integer('use_coin')->defalt(0);

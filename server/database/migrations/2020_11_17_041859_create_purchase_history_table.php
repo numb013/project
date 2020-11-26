@@ -14,7 +14,7 @@ class CreatePurchaseHistoryTable extends Migration
     public function up()
     {
         Schema::create('purchase_history', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
         });
     }

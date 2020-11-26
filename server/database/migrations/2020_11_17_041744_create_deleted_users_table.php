@@ -14,7 +14,7 @@ class CreateDeletedUsersTable extends Migration
     public function up()
     {
         Schema::create('deleted_users', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('user_id');
             $table->integer('type');
             $table->string('hash_id');

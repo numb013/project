@@ -14,7 +14,7 @@ class CreateUserBankAccountTable extends Migration
     public function up()
     {
         Schema::create('user_bank_account', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('cast_id');
             $table->integer('company_id');
             $table->string('bank_code');

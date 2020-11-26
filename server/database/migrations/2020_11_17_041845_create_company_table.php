@@ -14,11 +14,11 @@ class CreateCompanyTable extends Migration
     public function up()
     {
         Schema::create('company', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('name');
-            $table->integer('category');
+            $table->bigIncrements('id');
+            $table->string('name', 45)->nullable();
+            $table->string('category');
             $table->string('address');
-            $table->integer('tel');
+            $table->string('tel', 30)->nullable();
             $table->string('email');
             $table->string('hp_url')->nullable();
             $table->string('contact_name')->nullable();

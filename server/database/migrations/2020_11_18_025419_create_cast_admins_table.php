@@ -14,9 +14,8 @@ class CreateCastAdminsTable extends Migration
     public function up()
     {
         Schema::create('cast_admins', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name');
-            $table->integer('user_id');
             $table->integer('company_id');
             $table->tinyInteger('authority')->defalt(0)->comment("0:配信者 1:管理者");
             $table->string('category')->nullable();

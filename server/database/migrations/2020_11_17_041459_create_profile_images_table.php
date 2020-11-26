@@ -14,8 +14,8 @@ class CreateProfileImagesTable extends Migration
     public function up()
     {
         Schema::create('profile_images', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
+            $table->bigIncrements('id');
+            $table->integer('cast_id');
             $table->integer('hash_id');
             $table->timestamps();
         });

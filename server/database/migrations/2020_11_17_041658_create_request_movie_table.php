@@ -14,8 +14,9 @@ class CreateRequestMovieTable extends Migration
     public function up()
     {
         Schema::create('request_movie', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('request_id');
+            $table->integer('cast_id');
             $table->integer('hash_id');
             $table->tinyInteger('status')->defalt(0);
             $table->tinyInteger('check_status')->nullable();

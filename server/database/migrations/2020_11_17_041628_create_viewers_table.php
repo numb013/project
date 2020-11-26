@@ -14,7 +14,7 @@ class CreateViewersTable extends Migration
     public function up()
     {
         Schema::create('viewers', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('user_id');
             $table->string('name');
             $table->dateTime('barthbay');
