@@ -8,8 +8,13 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class CastService
 {
+
+    protected $castAdmin;
+
     public function __construct(
+        CastAdmin $castAdmin
     ) {
+        $this->castAdmin = $castAdmin;
     }
 
     public function arrOnly($request)
@@ -40,7 +45,7 @@ class CastService
         if (!empty($search_param['free_word'])) {
             $column.= ', CASE WHEN cast_admins.name like "%' . $search_param['free_word']. '%" THEN 1 ELSE 0 END as name_hit';
         }
-        $query = CastAdmin::select(DB::raw($column));
+        $query = $this->castAdmin->select(DB::raw($column));
         $query->leftJoin('companies', 'companies.id', '=', 'cast_admins.id');
         if (!empty($search_param['freeword'])) {
             $freeword = $search_param['freeword'];
@@ -124,6 +129,25 @@ class CastService
             $cast_list = $cast_list->toArray();
         }
         return $cast_list;
+    }
+
+    // キャストの詳細画面の情報の更新
+    public function update(array $params = []): void
+    {
+        DB::transaction(function () use ($params) {
+            $this->castAdmin->find($params['cast_id'])
+                ->fill($params)
+                ->save();
+
+            if (isset($params['user_state'])) {
+                $params['state'] = $params['user_state'];
+                unset($params['user_state']);
+            }
+
+            $this->castAdmin->find($params['cast_id'])
+                ->fill($params)
+                ->save();
+        });
     }
 
 }
