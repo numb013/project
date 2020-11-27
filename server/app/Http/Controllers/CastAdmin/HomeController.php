@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\RequestList;
 use App\Notice;
+use Auth;
+use Log;
+use DB;
 
 class HomeController extends Controller
 {
@@ -35,12 +38,12 @@ class HomeController extends Controller
         
         $column = "count('id') as notice_count";
         $notice_list = Notice::select(DB::raw($column))
-        ->where('cast_id', $cast->id)
+        ->where('user_id', $cast->id)
         ->where('confirmed', 0)
         ->get();
         if ($notice_list) {
             $notice_list = $notice_list->toArray();
         }
-        return view('cast_admin.home', conpact('cast','request_list', 'notice_list'));
+        return view('cast_admin.home', compact('cast','request_list', 'notice_list'));
     }
 }

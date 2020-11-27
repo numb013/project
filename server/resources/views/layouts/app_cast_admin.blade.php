@@ -34,6 +34,7 @@
     </head>
     <body>
         <div id="wrapper">
+            @if( Auth::check() )
             <!-- Navigation -->
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="background: #9a1414">
                 <div class="navbar-header">
@@ -100,17 +101,16 @@
                     </div>
                 </div>
             </nav>
-
             <div id="page-wrapper">
-
-        @yield('content')
-
-
+                @yield('content')
                 <!-- /.container-fluid -->
             </div>
-            <!-- /#page-wrapper -->
+        <!-- /#page-wrapper -->
+        @else
+            @yield('content')
+        @endif
 
-        </div>
+    </div>
         <!-- /#wrapper -->
 
         <!-- jQuery -->

@@ -34,93 +34,94 @@
     </head>
     <body>
         <div id="wrapper">
-            <!-- Navigation -->
-            <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/admin">VEAMER</a>
-                </div>
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <ul class="nav navbar-right navbar-top-links">
-                    <li class="dropdown navbar-inverse">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-bell fa-fw"></i> <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu dropdown-alerts">
-                            <li>
-                                <a href="{{ route('admin.logout') }}"
-                                    onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-
-                                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a class="text-center" href="#">
-                                    <strong>See All Alerts</strong>
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <!-- /.navbar-top-links -->
-
-                <div class="navbar-default sidebar" role="navigation">
-                    <div class="sidebar-nav navbar-collapse">
-                        <ul class="nav" id="side-menu">
-                            <li>
-                                <a href="/admin/request_list/list" class=""><i class="fa fa-dashboard fa-fw"></i>リクエスト</a>
-                            </li>
-                            <li>
-                                <a href="/admin/cast/list" class=""><i class="fa fa-dashboard fa-fw"></i>キャスト</a>
-                            </li>
-                            <li>
-                                <a href="/admin/viewer/list" class=""><i class="fa fa-dashboard fa-fw"></i>視聴者</a>
-                            </li>
-                            <li>
-                                <a href="/admin/company/list" class=""><i class="fa fa-dashboard fa-fw"></i>事務所</a>
-                            </li>
-                            <li>
-                                <a href="/admin/notice/list" class=""><i class="fa fa-dashboard fa-fw"></i>お知らせ</a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fa fa-bar-chart-o fa-fw"></i>支払い管理
-                                    <span class="fa arrow"></span>
-                                </a>
-                                <ul class="nav nav-second-level">
-                                    <li>
-                                        <a href="/admin/request_list/list">Flot Charts</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/request_list/list">Morris.js Charts</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-second-level -->
-                            </li>
-
-                        </ul>
+            @if( Auth::check() )
+                <!-- Navigation -->
+                <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="/admin">VEAMER</a>
                     </div>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <ul class="nav navbar-right navbar-top-links">
+                        <li class="dropdown navbar-inverse">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-bell fa-fw"></i> <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu dropdown-alerts">
+                                <li>
+                                    <a href="{{ route('admin.logout') }}"
+                                        onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                        Logout
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a class="text-center" href="#">
+                                        <strong>See All Alerts</strong>
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- /.navbar-top-links -->
+
+
+                    <div class="navbar-default sidebar" role="navigation">
+                        <div class="sidebar-nav navbar-collapse">
+                            <ul class="nav" id="side-menu">
+                                <li>
+                                    <a href="/admin/request_list/list" class=""><i class="fa fa-dashboard fa-fw"></i>リクエスト</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/cast/list" class=""><i class="fa fa-dashboard fa-fw"></i>キャスト</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/viewer/list" class=""><i class="fa fa-dashboard fa-fw"></i>視聴者</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/company/list" class=""><i class="fa fa-dashboard fa-fw"></i>事務所</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/notice/list" class=""><i class="fa fa-dashboard fa-fw"></i>お知らせ</a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="fa fa-bar-chart-o fa-fw"></i>支払い管理
+                                        <span class="fa arrow"></span>
+                                    </a>
+                                    <ul class="nav nav-second-level">
+                                        <li>
+                                            <a href="/admin/request_list/list">Flot Charts</a>
+                                        </li>
+                                        <li>
+                                            <a href="/admin/request_list/list">Morris.js Charts</a>
+                                        </li>
+                                    </ul>
+                                    <!-- /.nav-second-level -->
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <div id="page-wrapper">
+                    @yield('content')
+                    <!-- /.container-fluid -->
                 </div>
-            </nav>
-
-            <div id="page-wrapper">
-
-        @yield('content')
-
-
-                <!-- /.container-fluid -->
-            </div>
             <!-- /#page-wrapper -->
+            @else
+                @yield('content')
+            @endif
 
         </div>
         <!-- /#wrapper -->

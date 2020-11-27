@@ -10,9 +10,7 @@ use Illuminate\Support\Arr;
 class RequestListService
 {
     public function __construct(
-        BankBranchMst $bank_branch_mst
     ) {
-        $this->bankBranchMst = $bank_branch_mst;
     }
 
     public function arrOnly($request)

@@ -34,7 +34,7 @@ class RequestListController extends Controller
     {
         Log::debug("bbbbbb");
         $search_param = [];
-        $list = $this->requestSearch($search_param);
+        $list = $this->requestListService->requestSearch($search_param);
         return view('/admin/request_list/list', compact('list'));
     }
 

@@ -9,9 +9,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class CastService
 {
     public function __construct(
-        BankBranchMst $bank_branch_mst
     ) {
-        $this->bankBranchMst = $bank_branch_mst;
     }
 
     public function arrOnly($request)
@@ -37,8 +35,8 @@ class CastService
 
     public function castSearch($search_param)
     {
-        $column = 'cast_admins.*',;
-        column .= 'companies.*',;
+        $column = 'cast_admins.*, ';
+        $column .= 'companies.*';
         if (!empty($search_param['free_word'])) {
             $column.= ', CASE WHEN cast_admins.name like "%' . $search_param['free_word']. '%" THEN 1 ELSE 0 END as name_hit';
         }

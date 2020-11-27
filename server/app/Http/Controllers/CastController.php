@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-
+use DB;
+use Log;
+use Auth;
 use App\User;
 use App\Notice;
 use App\CastAdmin;
@@ -10,9 +12,9 @@ use App\Company;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\CastService;
-use DB;
-use Log;
+use App\Services\CastService;
+
+
 
 class CastController extends Controller
 {
