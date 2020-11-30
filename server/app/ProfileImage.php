@@ -12,6 +12,7 @@ class ProfileImage extends Model
      * @var array
      */
     protected $fillable = [
+        'cast_id',
         'user_id',
         'hash_id',
     ];

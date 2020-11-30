@@ -30,7 +30,6 @@ class CastService
             'descript',
             'total_post',
             'get_coin',
-            'get_coin',
             'score',
             'email', 
             'password',
@@ -40,8 +39,8 @@ class CastService
 
     public function castSearch($search_param)
     {
-        $column = 'cast_admins.*, ';
-        $column .= 'companies.*';
+        $column = 'cast_admins.id, cast_admins.name, authority,get_coin,total_post';
+        $column .= ', companies.name as campany_name';
         if (!empty($search_param['free_word'])) {
             $column.= ', CASE WHEN cast_admins.name like "%' . $search_param['free_word']. '%" THEN 1 ELSE 0 END as name_hit';
         }

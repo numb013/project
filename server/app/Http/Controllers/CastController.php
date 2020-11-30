@@ -13,6 +13,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Services\CastService;
+use App\Services\ProfileImageService;
 
 
 
@@ -20,13 +21,16 @@ class CastController extends Controller
 {
 
     private $castService;
+    private $profileImageService;
 
     public function __construct(
-        CastService $castService
+        CastService $castService,
+        ProfileImageService $profileImageService
     ) {
         // $this->middleware('auth');
         // $this->middleware('auth:cast_admin');
         $this->castService = $castService;
+        $this->profileImageService = $profileImageService;
     }
 
     public function index()
@@ -57,6 +61,22 @@ class CastController extends Controller
         ])->validate();
 
         $input_data = $request->all();
+
+        $this->validate($request, [
+            'file' => [
+                // 必須
+                'required',
+                // アップロードされたファイルであること
+                'file',
+                // ファイルであること
+                'image',
+                // MIMEタイプを指定
+                'mimes:jpeg,png',
+                // 最小縦横120px 最大縦横400px
+                'dimensions:min_width=120,min_height=120,max_width=400,max_height=400',
+            ]
+        ]);
+
         return view('/admin/cast/confirm', compact('input_data'));
     }
 
@@ -66,8 +86,14 @@ class CastController extends Controller
         $insert_data = $this->castService->arrOnly($request->all());
         $insert_data['password'] = bcrypt($insert_data['password']);
         $insert_data['category'] = implode( ",", $request->genre );
+        $insert_data['hash_id'] = str_random(6) . '_' . str_random(4);
+        $insert_data['company_id'] = 1;
 
-        CastAdmin::create($insert_data);
+        $cast_admin_id = CastAdmin::create($insert_data);
+
+       $this->profileImageService->imageUpload($request, $insert_data['hash_id']);
+
+
         return redirect('/admin/cast/list');
     }
 
@@ -101,8 +127,10 @@ class CastController extends Controller
     public function adminDetail(Request $request)
     {
         $cast_id = $request->input('id');
-        $cast_detail = CastAdmin::select('*')->where('id', $cast_id)->first();
-        return view('/admin/cast/detail', compact('cast_detail'));
+        $detail = CastAdmin::select('*')->where('id', $cast_id)->first()->toArray();
+        log::debug("aaaaaa");
+        log::debug($detail);
+        return view('/admin/cast/detail', compact('detail'));
     }
 
     //キャスト編集
@@ -128,8 +156,6 @@ class CastController extends Controller
 
 
 
-
-
     /**
     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     * キャスト管理
@@ -138,18 +164,54 @@ class CastController extends Controller
 
     public function castAdminCreate(Request $request)
     {
-        Log::debug("sssssssssssssssssssssss");
-        Log::debug($request);
+
         return view('/cast_admin/cast/detail');
     }
 
-    public function castAdminEdit()
+
+    public function castAdminProfileImage(Request $request)
     {
-        return view('/cast_admin/cast/edit');
+        $cast_id = $request->input('id');
+        $detail = CastAdmin::select('*')->where('id', $cast_id)->first()->toArray();
+        Log::debug("sssssssssssssss");
+        return view('/cast_admin/cast/profile_image', compact('detail'));
+    }
+
+    public function castAdminProfileImageUpdate(Request $request)
+    {
+        $user = Auth::user();
+        $this->validate($request, [
+            'file' => [
+                // 必須
+                'required',
+                // アップロードされたファイルであること
+                'file',
+                // ファイルであること
+                'image',
+                // MIMEタイプを指定
+                'mimes:jpeg,png',
+                // 最小縦横120px 最大縦横400px
+                'dimensions:min_width=120,min_height=120,max_width=400,max_height=400',
+            ]
+        ]);
+        $this->profileImageService->imageUpload($request, $user->hash_id);
+        return view('/cast_admin/home');
+    }
+
+    public function castAdminEdit(Request $request)
+    {
+        $cast_id = $request->input('id');
+        $detail = CastAdmin::select('*')->where('id', $cast_id)->first()->toArray();
+        return view('/cast_admin/cast/edit', compact('detail'));
     }
 
     public function castAdminDetail()
     {
+        $cast_id = $request->input('id');
+        $detail = CastAdmin::select('*')->where('id', $cast_id)->first()->toArray();
+        log::debug("aaaaaa");
+        log::debug($detail);
+
         return view('/cast_admin/cast/detail');
     }
 }

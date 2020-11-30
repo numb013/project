@@ -18,9 +18,11 @@ class CreateRequestListsTable extends Migration
             $table->integer('user_id');
             $table->integer('cast_id');
             $table->tinyInteger('status');
-            $table->tinyInteger('category');
+            $table->integer('video_id')->nullable();
+            $table->string('category');
+            $table->string('category1');
             $table->string('to_name');
-            $table->string('message');
+            $table->string('request_detail');
             $table->timestamps();
         });
     }

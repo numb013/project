@@ -16,12 +16,11 @@ class RequestListService
     public function arrOnly($request)
     {
         $request = Arr::only($request, [
-            'viewer_id',
+            'user_id',
             'cast_id',
             'status',
-            'category',
             'to_name',
-            'message',
+            'request_detail',
         ]);
         return $request;
     }
@@ -29,9 +28,9 @@ class RequestListService
     public function requestDetail($request_list_id)
     {
         $column = 'request_lists.*';
-        $column .= ', viewers.name as viewer_name, cast_admins.name as cast_name';
+        $column .= ', users.name as viewer_name, cast_admins.name as cast_name';
         $query = RequestList::select(DB::raw($column));
-        $query->join('viewers', 'viewers.id', '=', 'request_lists.viewer_id');
+        $query->join('users', 'users.id', '=', 'request_lists.user_id');
         $query->join('cast_admins', 'cast_admins.id', '=', 'request_lists.cast_id');
         $query->where('request_lists.id', $request_list_id);
         $detail = $query->first();
@@ -40,22 +39,22 @@ class RequestListService
 
     public function requestSearch($search_param)
     {
+
+
+
         $column = 'request_lists.*';
-        $column .= ', request_movie.hash_id as request_movie_hash_id, request_movie.status as request_movie_status, check_status, check_memo';
-        $column .= ', viewers.name as viewer_name, cast_admins.name as cast_name';
+        $column .= ', users.name as viewer_name, cast_admins.name as cast_name';
         if (!empty($search_param['free_word'])) {
             $column.= ', CASE WHEN request_lists.message like "%' . $search_param['free_word'] . '%" THEN 1 ELSE 0 END as name_hit';
         }
         $query = RequestList::select(DB::raw($column));
-        $query->join('viewers', 'viewers.id', '=', 'request_lists.viewer_id');
+        $query->join('users', 'users.id', '=', 'request_lists.user_id');
         $query->join('cast_admins', 'cast_admins.id', '=', 'request_lists.cast_id');
-        $query->leftjoin('request_movie', 'request_movie.request_id', '=', 'request_lists.id');
-
         if (!empty($search_param['free_word'])) {
             $query->where('request_lists.message', 'like BINARY', "%".$search_param['message']."%");
         }
         if (!empty($search_param['cast_id'])) {
-            $query->whereIn('request_lists.cast_id', $search_param['cast_id']);
+            $query->whereIn('request_lists.cast_id', [$search_param['cast_id']]);
         }
         if (!empty($search_param['status'])) {
             $query->whereIn('request_lists.status', $search_param['status']);

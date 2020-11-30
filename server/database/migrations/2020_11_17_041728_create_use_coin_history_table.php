@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRequestMovieTable extends Migration
+class CreateUseCoinHistoryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateRequestMovieTable extends Migration
      */
     public function up()
     {
-        Schema::create('request_movie', function (Blueprint $table) {
+        Schema::create('use_coin_history', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('request_id');
+            $table->integer('user_id');
             $table->integer('cast_id');
-            $table->integer('hash_id');
-            $table->tinyInteger('status')->defalt(0);
-            $table->tinyInteger('check_status')->nullable();
-            $table->string('check_memo')->nullable();
+            $table->integer('request_id');
+            $table->integer('use_coin')->default(0);
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ class CreateRequestMovieTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_movie');
+        Schema::dropIfExists('use_coin_history');
     }
 }

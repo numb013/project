@@ -13,6 +13,7 @@ class CastAdmin extends Authenticatable
      */
     protected $fillable = [
         'name', 
+        'hash_id',
         'authority',
         'company_id',
         'category',

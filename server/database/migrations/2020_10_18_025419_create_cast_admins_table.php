@@ -15,17 +15,18 @@ class CreateCastAdminsTable extends Migration
     {
         Schema::create('cast_admins', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('hash_id');
             $table->string('name');
-            $table->integer('company_id');
-            $table->tinyInteger('authority')->defalt(0)->comment("0:配信者 1:管理者");
+            $table->integer('company_id')->nullable();
+            $table->tinyInteger('authority')->default(0)->comment("0:配信者 1:管理者");
             $table->string('category')->nullable();
             $table->tinyInteger('can_type')->nullable()->comment("出来る事");
             $table->integer('price')->comment('料金');
             $table->integer('period')->comment('期間');
             $table->string('descript')->comment("説明");
-            $table->integer('total_post')->defalt(0)->comment("動画数");
-            $table->integer('get_coin')->defalt(0)->comment("獲得コイン");
-            $table->double('score')->defalt(0)->comment("評価");
+            $table->integer('total_post')->default(0)->comment("動画数");
+            $table->integer('get_coin')->default(0)->comment("獲得コイン");
+            $table->double('score')->default(0)->comment("評価");
             $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();

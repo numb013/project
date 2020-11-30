@@ -16,10 +16,10 @@ class CreateDeletedUsersTable extends Migration
         Schema::create('deleted_users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
-            $table->integer('type');
+            $table->integer('type')->comment("1:視聴者 2:キャスト");
             $table->string('hash_id');
             $table->string('name');
-            $table->integer('coin')->defalt(0);
+            $table->integer('coin')->default(0);
             $table->integer('commpany_id')->nullable();
             $table->timestamps();
         });

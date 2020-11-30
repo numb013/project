@@ -55,21 +55,24 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th></th>
+                                        <th>キャスト名</th>
+                                        <th>視聴者名</th>
+                                        <th>ステータス</th>
+                                        <th>投稿日</th>
+                                        <th>確認</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach ($list as $key => $value) 
-                                        <tr>
-                                            <td>{{ $value["id"] }} </td>
-                                            <td>{{ $value["to_name"] }}</td>
-                                            <td>{{ $value["message"] }}</td>
-                                            <td><a href="/cast_admin/request_list/detail?id={{ $value['id'] }}">編集</a></td>
-                                        </tr>
-                                    @endforeach
-
+                                        @foreach ($list as $key => $value)
+                                            <tr>
+                                                <td>{{ $value['id'] }}</td>
+                                                <td>{{ $value['cast_name'] }}</td>
+                                                <td>{{ $value['viewer_name'] }}</td>
+                                                <td>{{ config('const.request_status')[$value['status']] }}</td>
+                                                <td>{{ $value["created_at"] }}</td>
+                                                <td><a href="/cast_admin/request_list/detail?id={{ $value['id'] }}">検閲</a></td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

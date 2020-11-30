@@ -36,12 +36,18 @@
                                 </div>
                                 <div class="form-group">
                                     <label>名前</label>
-                                    <input class="form-control" name="name" placeholder="名前" value="{{ old('name') }}">
+                                    <input class="form-control" name="name" placeholder="名前" value="{{ $detail['name'] }}">
                                 </div>
                                 <div class="form-group slider-container" style="width: 100%; display: grid; margin: 0 auto;">
                                     <label>料金</label>
-                                    <input type="range" name="price" id="range" min="0" max="10000" step="100" value="0" class="form-control">
-                                    <p><span id="value">0</span><span>コイン</span></p>
+                                    <?php
+                                        $price = 0;
+                                        if (!empty($detail['price'])) {
+                                            $price = $detail['price'];
+                                        }                                    
+                                    ?>
+                                    <input type="range" name="price" id="range" min="0" max="10000" step="100" value="{{ $price }}" class="form-control">
+                                    <p><span id="value">{{ $price }}</span><span>コイン</span></p>
                                 </div>
                                 <div class="form-group">
                                     <label>期間</label>

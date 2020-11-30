@@ -15,7 +15,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-bar-chart-o fa-fw"></i>
-                    未完了リクエスト
+                    お知らせ
                     <a href="/admin/cast/list">戻る</a>
                 </div>
                 <!-- /.panel-heading -->

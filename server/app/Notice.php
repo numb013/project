@@ -13,8 +13,8 @@ class Notice extends Model
      */
     protected $fillable = [
         'user_id',
+        'cast_id',
         'type',
-        'send_user_type',
         'confirmed',
         'category',
         'message',

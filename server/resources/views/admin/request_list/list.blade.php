@@ -49,7 +49,8 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i>未完了リクエスト
+                    <i class="fa fa-bar-chart-o fa-fw"></i>リクエスト一覧
+                    <a href="/admin/request_list/create">リクエスト新規作成</a>
                     
                 </div>
                 <!-- /.panel-heading -->

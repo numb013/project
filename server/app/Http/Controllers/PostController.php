@@ -264,122 +264,122 @@ class PostController extends Controller
     }
 
     public function MovieUpload(Request $request) {
-        // $user = Auth::user();
-        // $hash_id = $user->hash_id;
+        $user = Auth::user();
+        $hash_id = $user->hash_id;
 
-        // $validator = Validator::make($request->all(), [
-        //     'video_file' => 'required|file'
-        // ]);
-        // // バリデーションエラーだった場合
-        // if ($validator->fails()) {
-        //     $error_info = $this->checkService->errorCheck(self::REQUEST_CHECK);
-        //     return response()->json($error_info);
-        // }
+        $validator = Validator::make($request->all(), [
+            'video_file' => 'required|file'
+        ]);
+        // バリデーションエラーだった場合
+        if ($validator->fails()) {
+            $error_info = $this->checkService->errorCheck(self::REQUEST_CHECK);
+            return response()->json($error_info);
+        }
 
-        // $file = $request->file('video_file');
-        // $tmp_name = $file->path();
-        // $upload_name = $file->getClientOriginalName();
-        // $video['size'] = $file->getClientSize();
-        // $video['type'] = $file->getClientMimeType();
-        // // $tmp_name = $_FILES['video_file']['tmp_name'];
-        // // $upload_name = $_FILES['video_file']['name'];
-        // // $video['size'] = $_FILES['video_file']['size'];
-        // // $video['type'] = $_FILES['video_file']['type'];
+        $file = $request->file('video_file');
+        $tmp_name = $file->path();
+        $upload_name = $file->getClientOriginalName();
+        $video['size'] = $file->getClientSize();
+        $video['type'] = $file->getClientMimeType();
+        // $tmp_name = $_FILES['video_file']['tmp_name'];
+        // $upload_name = $_FILES['video_file']['name'];
+        // $video['size'] = $_FILES['video_file']['size'];
+        // $video['type'] = $_FILES['video_file']['type'];
 
-        // $ext = substr($upload_name, strrpos($upload_name, '.') + 1);
-        // //ファイルチェック（mov、mp4、m2tsのみ）
-        // $file_error = $this->fileValidate($video);
-        // if (!empty($file_error)) {
-        //     $error_info = $this->checkService->errorCheck(self::CONTENT_CHECK);
-        //     Log::debag('file_error');
-        //     return response()->json($error_info);
-        // }
+        $ext = substr($upload_name, strrpos($upload_name, '.') + 1);
+        //ファイルチェック（mov、mp4、m2tsのみ）
+        $file_error = $this->fileValidate($video);
+        if (!empty($file_error)) {
+            $error_info = $this->checkService->errorCheck(self::CONTENT_CHECK);
+            Log::debag('file_error');
+            return response()->json($error_info);
+        }
 
-        // //ビデオ情報の取得
-        // $ffprobe =  FFMpeg\FFProbe::create();
-        // $ffmpeg =  FFMpegAdd::create([], Log::getLogger());
+        //ビデオ情報の取得
+        $ffprobe =  FFMpeg\FFProbe::create();
+        $ffmpeg =  FFMpegAdd::create([], Log::getLogger());
 
-        // $is_sound = $ffprobe->streams($tmp_name)->audios()->count();
+        $is_sound = $ffprobe->streams($tmp_name)->audios()->count();
 
-        // //メディアファイルの検証（ffmpegで処理可能かどうか確認）
-        // // $video['valid'] = $ffprobe->isValid($tmp_name); // returns bool
-        // //ビデオ長さ取得
-        // $video['duration'] = $ffprobe
+        //メディアファイルの検証（ffmpegで処理可能かどうか確認）
+        // $video['valid'] = $ffprobe->isValid($tmp_name); // returns bool
+        //ビデオ長さ取得
+        $video['duration'] = $ffprobe
+            ->streams($tmp_name) // extracts streams informations
+            ->videos()                      // filters video streams
+            ->first()                       // returns the first video stream
+            ->get('duration');
+
+        //ビデオ縦横取得
+        $video_dimesions = $ffprobe
+            ->streams($tmp_name) // extracts streams informations
+            ->videos()                      // filters video streams
+            ->first()                       // returns the first video stream
+            ->getDimensions();
+
+            //綺麗な動画アップの仕様決まるまでコメントアウト
+        // $video['bit_rate'] = $ffprobe
         //     ->streams($tmp_name) // extracts streams informations
         //     ->videos()                      // filters video streams
         //     ->first()                       // returns the first video stream
-        //     ->get('duration');
+        //     ->get('bit_rate');
 
-        // //ビデオ縦横取得
-        // $video_dimesions = $ffprobe
-        //     ->streams($tmp_name) // extracts streams informations
-        //     ->videos()                      // filters video streams
-        //     ->first()                       // returns the first video stream
-        //     ->getDimensions();
+        $video['width'] = $video_dimesions->getWidth();
+        $video['height'] = $video_dimesions->getHeight();
 
-        //     //綺麗な動画アップの仕様決まるまでコメントアウト
-        // // $video['bit_rate'] = $ffprobe
-        // //     ->streams($tmp_name) // extracts streams informations
-        // //     ->videos()                      // filters video streams
-        // //     ->first()                       // returns the first video stream
-        // //     ->get('bit_rate');
+        //ビデオハッシュID取得
+        $video['hash_val'] = hash_file('md5', $tmp_name);
+        //ビデオバリデーション
+        $error = $this->videoValidate($video);
+        if (!empty($error)) {
+            $error_info = $this->checkService->errorCheck($error);
+            return response()->json($error_info);
+        }
 
-        // $video['width'] = $video_dimesions->getWidth();
-        // $video['height'] = $video_dimesions->getHeight();
+        //フォルダ内に動画が既にある場合、削除する。
+        $exist_file = Storage::files($hash_id);
+        if (!empty($exist_file)) {
+            Storage::deleteDirectory($hash_id);
+        }
+        if (!is_dir(storage_path('app/'.$hash_id))) {
+            mkdir(storage_path('app/'.$hash_id));
+        }
+        //一旦strageフォルダに保存
+        $url = Storage::disk('local')->put($hash_id, $file);
+        $origin_movie_path = storage_path('app/'.$url);
+        $copy_movie_path = storage_path('app/'.$hash_id.'/movie.mp4');
+        $storage_video = $ffmpeg->open($origin_movie_path);
+        $format = new X264();
+        $format->setAudioCodec('copy');
+        $format->setVideoCodec('copy');
+        $storage_video->save($format, $copy_movie_path);
 
-        // //ビデオハッシュID取得
-        // $video['hash_val'] = hash_file('md5', $tmp_name);
-        // //ビデオバリデーション
-        // $error = $this->videoValidate($video);
-        // if (!empty($error)) {
-        //     $error_info = $this->checkService->errorCheck($error);
-        //     return response()->json($error_info);
-        // }
-
-        // //フォルダ内に動画が既にある場合、削除する。
-        // $exist_file = Storage::files($hash_id);
-        // if (!empty($exist_file)) {
-        //     Storage::deleteDirectory($hash_id);
-        // }
-        // if (!is_dir(storage_path('app/'.$hash_id))) {
-        //     mkdir(storage_path('app/'.$hash_id));
-        // }
-        // //一旦strageフォルダに保存
-        // $url = Storage::disk('local')->put($hash_id, $file);
-        // $origin_movie_path = storage_path('app/'.$url);
-        // $copy_movie_path = storage_path('app/'.$hash_id.'/movie.mp4');
-        // $storage_video = $ffmpeg->open($origin_movie_path);
-        // $format = new X264();
-        // $format->setAudioCodec('copy');
-        // $format->setVideoCodec('copy');
-        // $storage_video->save($format, $copy_movie_path);
-
-        // // バケットの名前を入力
-        // $bucket_name = config('filesystems.gcs.upload_bucket_name');
-        // //動画PATH
-        // $path = array();
-        // $path[] = $origin_movie_path;
-        // $path[] = $copy_movie_path;
-        // $options = array();
-        // $total_seconds_hash = md5(time());
-        // $options[] = ['name' => $hash_id.'/up/'.$total_seconds_hash.'/original.'.$ext];
-        // $options[] = ['name' => $hash_id.'/up/'.$total_seconds_hash.'/view.mp4'];
-        // $this->googleCloudService->GoogleStorageMultiple($bucket_name, $path, $options);
-        // //NASから一時ファイルを削除
-        // Storage::deleteDirectory($hash_id);
-        // $gcs_storage_url = 'https://storage.googleapis.com/';
-        // $data = [
-        //     // 'video_url' => secure_url('/').'/upload/'.$options[1]['name'],
-        //     // 'original_video_url' => secure_url('/').'/upload/'.$options[0]['name'],
-        //     'video_url' => $gcs_storage_url.$bucket_name.'/'.$options[1]['name'],
-        //     'original_video_url' => $gcs_storage_url.$bucket_name.'/'.$options[0]['name'],
-        //     'origin_width' => $video['width'],
-        //     'origin_height' => $video['height'],
-        //     'movie_length' => (int)$video['duration'],
-        //     'is_sound' => $is_sound,
-        //     'file_size' => $video['size'],
-        // ];
-        // return response()->json($data);
+        // バケットの名前を入力
+        $bucket_name = config('filesystems.gcs.upload_bucket_name');
+        //動画PATH
+        $path = array();
+        $path[] = $origin_movie_path;
+        $path[] = $copy_movie_path;
+        $options = array();
+        $total_seconds_hash = md5(time());
+        $options[] = ['name' => $hash_id.'/up/'.$total_seconds_hash.'/original.'.$ext];
+        $options[] = ['name' => $hash_id.'/up/'.$total_seconds_hash.'/view.mp4'];
+        $this->googleCloudService->GoogleStorageMultiple($bucket_name, $path, $options);
+        //NASから一時ファイルを削除
+        Storage::deleteDirectory($hash_id);
+        $gcs_storage_url = 'https://storage.googleapis.com/';
+        $data = [
+            // 'video_url' => secure_url('/').'/upload/'.$options[1]['name'],
+            // 'original_video_url' => secure_url('/').'/upload/'.$options[0]['name'],
+            'video_url' => $gcs_storage_url.$bucket_name.'/'.$options[1]['name'],
+            'original_video_url' => $gcs_storage_url.$bucket_name.'/'.$options[0]['name'],
+            'origin_width' => $video['width'],
+            'origin_height' => $video['height'],
+            'movie_length' => (int)$video['duration'],
+            'is_sound' => $is_sound,
+            'file_size' => $video['size'],
+        ];
+        return response()->json($data);
     }
 
     public function videoValidate($video)

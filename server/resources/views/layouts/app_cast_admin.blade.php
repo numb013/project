@@ -25,6 +25,22 @@
         <!-- Custom Fonts -->
         <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
 
+        <!-- jQuery -->
+        <script src="{{ asset('js/jquery.min.js') }}"></script>
+
+        <!-- Bootstrap Core JavaScript -->
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+
+        <!-- Metis Menu Plugin JavaScript -->
+        <script src="{{ asset('js/metisMenu.min.js') }}"></script>
+
+        <!-- Morris Charts JavaScript -->
+        <script src="{{ asset('js/raphael.min.js') }}"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="{{ asset('js/startmin.js') }}"></script>
+
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -96,7 +112,11 @@
                                 </ul>
                                 <!-- /.nav-second-level -->
                             </li>
-
+                            @if( Auth::user()->authority == 1 )
+                                <li>
+                                    <a href="/cast_admin/company/coin" class=""><i class="fa fa-dashboard fa-fw"></i>事務所管理</a>
+                                </li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -112,23 +132,6 @@
 
     </div>
         <!-- /#wrapper -->
-
-        <!-- jQuery -->
-        <script src="{{ asset('js/jquery.min.js') }}"></script>
-
-        <!-- Bootstrap Core JavaScript -->
-        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-
-        <!-- Metis Menu Plugin JavaScript -->
-        <script src="{{ asset('js/metisMenu.min.js') }}"></script>
-
-        <!-- Morris Charts JavaScript -->
-        <script src="{{ asset('js/raphael.min.js') }}"></script>
-
-        <!-- Custom Theme JavaScript -->
-        <script src="{{ asset('js/startmin.js') }}"></script>
-
-
     </body>
 </html>
 

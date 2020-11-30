@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">リクエスト作成</h1>
+            <h1 class="page-header">事務所作成</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -12,7 +12,7 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    作成<a href="/admin/request_list/list">戻る</a>
+                    作成<a href="/admin/company/list">戻る</a>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -27,37 +27,31 @@
                             </div>
                         @endif
 
-
-
-                        <form role="form" method="post" action="{{action('RequestListController@adminComplete')}}" class="form">
+                        <form role="form" method="post" action="{{action('CompanyController@adminConfirm')}}" class="form">
                             {{ csrf_field() }}
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label>ユーザーID</label>
-                                    <input class="form-control" name="user_id" placeholder="user_id" value="{{ old('user_id') }}">
+                                    <label>名前</label>
+                                    <input class="form-control" name="name" placeholder="名前" value="{{ old('name') }}">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>cast_id</label>
-                                    <input class="form-control" name="cast_id" placeholder="cast_id" value="{{ old('cast_id') }}">
+                                    <label>email</label>
+                                    <input class="form-control" name="email" placeholder="メールアドレス" value="{{ old('email') }}">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>to_name</label>
-                                    <input class="form-control" name="to_name" placeholder="to_name" value="{{ old('to_name') }}">
+                                    <label>住所</label>
+                                    <input class="form-control" name="address" placeholder="住所" value="{{ old('address') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label>status</label>
-                                    <select name="status" class="form-control">
-                                        @foreach (config('const.authority') as $key => $value)
-                                            <option value="{{ $key }}">{{ $value }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label>電話</label>
+                                    <input class="form-control" name="tel" placeholder="電話" value="{{ old('tel') }}">
                                 </div>
-                                
-                            </div>
-                            <div class="col-lg-6">
-
+                                <div class="form-group">
+                                    <label>HP</label>
+                                    <input class="form-control" name="hp_url" placeholder="hp_url" value="{{ old('hp_url') }}">
+                                </div>
                                 <div data-toggle='buttons' id='menu' class="form-group">
                                     <label>ジャンル</label>
                                     @foreach (config('const.genre') as $key => $value)
@@ -66,11 +60,25 @@
                                         </label>
                                     @endforeach
                                 </div>
-
+                            </div>
+                            <div class="col-lg-6">
 
                                 <div class="form-group">
-                                    <label>説明</label>
-                                    <textarea name="request_detail" class="form-control">{{ old('request_detail') }}</textarea>
+                                    <label>担当者名</label>
+                                    <input class="form-control" name="contact_name" placeholder="担当者名" value="{{ old('contact_name') }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>権限</label>
+                                    <select name="accouont_type" class="form-control">
+                                        @foreach (config('const.authority') as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>                                
+                                <div class="form-group">
+                                    <label>転送名</label>
+                                    <input class="form-control" name="transfer_name" placeholder="転送名" value="{{ old('contact_mail') }}">
                                 </div>
                                 <input class="btn btn-primary" type="submit" value="送信" />
                             </div>

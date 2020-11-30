@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUseViewerCoinHistoryTable extends Migration
+class CreateVideosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateUseViewerCoinHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('use_viewer_coin_history', function (Blueprint $table) {
+        Schema::create('videos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_id');
             $table->integer('cast_id');
-            $table->integer('request_id');
-            $table->integer('use_coin')->defalt(0);
+            $table->integer('hash_id');
+            $table->tinyInteger('target_type')->comment("1:リクエスト 2:自己紹介");
+            $table->tinyInteger('state')->default(0);
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateUseViewerCoinHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('use_viewer_coin_history');
+        Schema::dropIfExists('videos');
     }
 }

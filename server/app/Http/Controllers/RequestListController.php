@@ -9,19 +9,23 @@ use DB;
 use Log;
 use App\RequestList;
 use App\Services\RequestListService;
+use App\Services\VideoService;
 use App\User;
 
 class RequestListController extends Controller
 {
 
     private $requestListService;
+    private $videoService;
 
     public function __construct(
-        RequestListService $requestListService
+        RequestListService $requestListService,
+        VideoService $videoService
     ) {
         // $this->middleware('auth');
         // $this->middleware('auth:cast_admin');
         $this->requestListService = $requestListService;
+        $this->videoService = $videoService;
     }
 
     /**
@@ -30,9 +34,26 @@ class RequestListController extends Controller
     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     */
 
+    //リクエスト作成
+    public function adminCreate(Request $request)
+    {
+        return view('/admin/request_list/create');
+    }
+
+
+    //リクエスト作成完了
+    public function adminComplete(Request $request)
+    {
+        $insert_data = $this->requestListService->arrOnly($request->all());
+        $insert_data['category'] = implode( ",", $request->genre );
+        $insert_data['category1'] = implode( ",", $request->genre );
+
+        RequestList::create($insert_data);
+        return redirect('/admin/request_list/list');
+    }
+
     public function adminList(Request $request)
     {
-        Log::debug("bbbbbb");
         $search_param = [];
         $list = $this->requestListService->requestSearch($search_param);
         return view('/admin/request_list/list', compact('list'));
@@ -42,7 +63,7 @@ class RequestListController extends Controller
     {
         $search_param['sort_type'] = $request->sort_type;
         $search_param['free_word'] = $request->free_word;
-        $search_param['viewer_id'] = $request->viewer_id;
+        $search_param['user_id'] = $request->user_id;
         $search_param['category'] = $request->category;
         $search_param['cast_id'] = $request->cast_id;
         $search_param['to_name'] = $request->to_name;
@@ -82,16 +103,6 @@ class RequestListController extends Controller
 
 
 
-
-
-
-
-
-
-
-
-
-
     /**
     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     * キャスト管理
@@ -101,11 +112,11 @@ class RequestListController extends Controller
     public function castAdminList(Request $request)
     {
         $user = Auth::user();
-        // $cast_id = $request->input('id');
-        $list = RequestList::select('*')->get();
-        if ($list) {
-            $list = $list->toArray();
-        }
+
+        $search_param['cast_id'] = $user->id;
+        $list = $this->requestListService->requestSearch($search_param);
+        Log::debug("dddddddddddddddddd");
+        Log::debug($list);
         return view('/cast_admin/request_list/list', compact('list'));
     }
 
@@ -116,45 +127,24 @@ class RequestListController extends Controller
         return view('/cast_admin/request_list/detail', compact('detail'));
     }
 
-    public function castAdminMovieUpload(Request $request)
+    public function castAdminEdit(Request $request)
     {
-        // ① フォームの入力値を取得
-        $inputs = \Request::all();
-     
-        // ② デバッグ： $inputs の内容確認
-        //    dd($inputs);
-         
-        // $this->validate($request, [
-        //     'file' => [
-        //         // 必須
-        //         'required',
-        //         // アップロードされたファイルであること
-        //         'file',
-        //         // ファイルであること
-        //         'image',
-        //         // MIMEタイプを指定
-        //         'mimes:jpeg,png',
-        //         // 最小縦横120px 最大縦横400px
-        //         'dimensions:min_width=120,min_height=120,max_width=400,max_height=400',
-        //     ]
-        // ]);
-     
-        if ($request->file('file')->isValid([])) {
-            $mes = $request->file('file')->getClientOriginalName();
-            $filename = $request->file->storeAs(
-                'public/files', $mes
-            );
-            $user = User::find(auth()->id());
-            $user->avatar_filename = basename($filename);
-            $user->save();
-            return redirect('/cast_admin/home')->with('success', '保存しました。'.$mes);
-        } else {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(['file' => 'アップロードされていないか不正なデータです。']);
-        }
-        return view('/cast_admin/home');
+        $request_id = $request->input('id');
+        $detail = RequestList::select('*')->where('id', $request_id)->first();
+        return view('/cast_admin/request_list/detail', compact('detail'));
+    }
 
+
+    public function castAdminVideoUpload(Request $request)
+    {
+        $user = Auth::user();
+        $request_list_id = $request->request_list_id;
+        $video_id = $this->videoService->videoUpload($request, $user->hash_id);
+
+        RequestList::where('id', $request_list_id)->update([
+            'status' => 1,
+            'video_id' => $video_id,
+        ]);
+        return redirect('/cast_admin/request_list/detail/?id=' . $request_list_id);
     }
 }

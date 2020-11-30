@@ -13,7 +13,7 @@ class FavoriteUser extends Model
      * @var array
      */
     protected $fillable = [
-        'viewer_id',
+        'user_id',
         'cast_id',
     ];
 }

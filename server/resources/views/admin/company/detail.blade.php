@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">キャスト詳細</h1>
+            <h1 class="page-header">事務所詳細</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -16,8 +16,8 @@
                 <div class="panel-heading">
                     <i class="fa fa-bar-chart-o fa-fw"></i>
                     未完了リクエスト
-                    <a href="/admin/cast/list">戻る</a>
-                    <a href="/admin/cast/edit?id={{ $detail['id'] }}">編集</a>
+                    <a href="/admin/company/list">戻る</a>
+                    <a href="/admin/company/edit?id={{ $detail['id'] }}">編集</a>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -85,10 +85,7 @@
                                             <td>created_at</td>
                                             <td>{{ $detail['created_at'] }}</td>
                                         </tr>
-                                        <tr>
-                                            <td>1111 </td>
-                                            <td><video src="https://d3el26csp1xekx.cloudfront.net/v/wm-KH4D17A8X.mp4" controls></video></td>
-                                        </tr>
+
                                     </tbody>
                                 </table>
                             </div>

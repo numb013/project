@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">キャスト詳細</h1>
+            <h1 class="page-header">お知らせ詳細</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -15,7 +15,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-bar-chart-o fa-fw"></i>
-                    未完了リクエスト
+                    お知らせ
                     <a href="/admin/cast/list">戻る</a>
                 </div>
                 <!-- /.panel-heading -->

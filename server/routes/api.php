@@ -18,5 +18,14 @@ Route::group(["middleware" => "api"], function () {
     Route::post('/register', 'Auth\RegisterController@register'); // 追加
     Route::group(['middleware' => ['jwt.auth']], function () {
     	Route::post('/home', 'ApiController@index');
+
+    	//視聴者登録
+    	Route::post('/viewer/create', 'ViewerController@apiCreate');
+    	Route::post('/viewer/edit', 'ViewerController@apiEdit');
+    	Route::post('/viewer/update', 'ViewerController@apiUpdate');
+
+    	//リクエスト
+		Route::post('/request_list/create', 'RequestListController@apiCreate');
+		Route::get('/request_list/detail', 'RequestListController@apiDetail');   	
     });
 });

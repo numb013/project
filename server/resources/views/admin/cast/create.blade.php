@@ -27,7 +27,7 @@
                             </div>
                         @endif
 
-                        <form role="form" method="post" action="{{action('CastController@adminConfirm')}}" class="form">
+                        <form role="form" method="post" action="{{action('CastController@adminConfirm')}}" class="form" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="col-lg-6">
                                 <div class="form-group">
@@ -65,15 +65,32 @@
                                     <p><span id="value">{{ $price }}</span><span>コイン</span></p>
                                 </div>
 
-                                <div class="form-group">
+                                <!--                                 
                                     <div class="form-group">
-                                        {!! Form::label('file', '動画アップロード', ['class' => 'control-label']) !!}
-                                        {!! Form::file('file') !!}
-                                    </div>
+                                        <div class="form-group">
+                                            {!! Form::label('file', '動画アップロード', ['class' => 'control-label']) !!}
+                                            {!! Form::file('file') !!}
+                                        </div>
+                                    </div> 
+                                -->
+
+                                <p style="font-weight: bold; font-size: 14px;">プロフィール画像</p>
+                                <div class="form-group" id="attachment">
+                                    <label>
+                                        <input type="file" name="file" class="fileinput" id="myImage" accept="image/*">ファイルを添付する
+                                    </label>
+                                </div>
+                                <p>ファイルを選択すると、下にプレビューを表示します。</p>
+                                <div style="display:inline-block;min-width:200px; min-height:200px; border:5px dashed #eee; padding:10px;">
+                                    <img id="preview">
+                                    <p>
+                                        <script>
+                                        $('#myImage').on('change', function (e) {var reader = new FileReader();reader.onload = function (e) {$("#preview").attr('src', e.target.result);}; reader.readAsDataURL(e.target.files[0]);});
+                                        </script>
+                                    </p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
-
                                 <div class="form-group">
                                     <label>所属事務所</label>
                                     <select name="authority" class="form-control">
@@ -119,6 +136,42 @@
         <!-- /.col-lg-12 -->
     </div>
 </div>
+
+<style>
+    #preview {
+        width: 60%;
+    }
+    #attachment label {
+     /* ボタン部分の見た目（任意） */
+     display: inline-block;
+     position: relative;
+     background: #222323;
+     color:#fff;
+     font-weight: initial;
+     padding: 10px 18px;
+     border-radius: 4px;
+     transition: all 0.3s;
+    }
+    #attachment label:hover {
+     background: #ccc;
+      color:#000;
+     transition: all 0.4s;
+    }
+    #attachment label input {
+     /* 今回のポイント */
+     position: absolute;
+     left:0;
+     top:0;
+     opacity: 0;
+     width: 100%;
+     height: 100%;
+    }
+    #attachment .filename {
+     font-weight: 16px;
+     margin:0 0 0 10px;
+    }
+</style>
+
 <script>
   var elem = document.getElementById('range');
   var target = document.getElementById('value');
@@ -128,5 +181,15 @@
     }
   }
   elem.addEventListener('input', rangeValue(elem, target));
+
+
+  $('#myImage').on('change', function (e) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+          $("#preview").attr('src', e.target.result);
+      }
+      reader.readAsDataURL(e.target.files[0]);
+  });
+
 </script>
 @endsection

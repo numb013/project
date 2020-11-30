@@ -12,12 +12,13 @@ class RequestList extends Model
      * @var array
      */
     protected $fillable = [
-        'viewer_id',
+        'user_id',
         'cast_id',
         'status',
         'category',
+        'category1',
         'to_name',
-        'message',
+        'request_detail',
         'created_at',
     ];
     protected $dates = [

@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">キャスト一覧</h1>
+            <h1 class="page-header">事務所一覧</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -49,8 +49,8 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i>未完了リクエスト
-                    <a href="/admin/cast/create">キャスト新規作成</a>
+                    <i class="fa fa-bar-chart-o fa-fw"></i>未完了事務所
+                    <a href="/admin/company/create">事務所新規作成</a>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -74,10 +74,9 @@
                                                 <td>{{ $value['get_coin'] }}</td>
                                                 <td>{{ $value['authority'] }}</td>
                                                 <td>{{ $value['total_post'] }}</td>
-                                                <td><a href="/admin/cast/detail?id={{ $value['id'] }}">詳細</a></td>
+                                                <td><a href="/admin/company/detail?id={{ $value['id'] }}">詳細</a></td>
                                             </tr>
                                         @endforeach
-
                                     </tbody>
                                 </table>
                             </div>

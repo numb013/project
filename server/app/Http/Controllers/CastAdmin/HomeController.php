@@ -30,11 +30,14 @@ class HomeController extends Controller
         $cast = Auth::user();
         $request_list = RequestList::select()
         ->where('cast_id', $cast->id)
-        ->where('status', 0)
         ->get();
         if ($request_list) {
             $request_list = $request_list->toArray();
         }
+
+
+Log::debug("sssssseeeeeeessssssss");
+Log::debug($request_list);
         
         $column = "count('id') as notice_count";
         $notice_list = Notice::select(DB::raw($column))

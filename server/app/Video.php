@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Viewer extends Model
+class Video extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,10 +12,9 @@ class Viewer extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'name',
-        'barthbay',
-        'sex',
-        'coin',
+        'cast_id',
+        'hash_id',
+        'target_type',
+        'state',
     ];
 }

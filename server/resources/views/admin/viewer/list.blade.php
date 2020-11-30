@@ -19,7 +19,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <form role="form" method="post" action="{{action('CastController@adminSearch')}}" class="form">
+                        <form role="form" method="post" action="{{action('ViewerController@adminSearch')}}" class="form">
                             {{ csrf_field() }}
                             <div class="col-lg-8">
                                 <div class="form-group">
@@ -60,20 +60,24 @@
                                 <table class="table table-bordered table-hover table-striped">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th>Amount</th>
+                                        <th>名前</th>
+                                        <th>性別</th>
+                                        <th>コイン</th>
+                                        <th>ステータス</th>                                        
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1111 </td>
-                                            <td>2222</td>
-                                            <td>222222</td>
-                                            <td><a href="/admin/request_list/detail?id=1">編集</a></td>
+                                        @foreach ($list as $key => $value)
+                                            <tr>
+                                                <td>{{ $value['name'] }}</td>
+                                                <td>{{ $value['sex'] }}</td>
+                                                <td>{{ $value['coin'] }}</td>
+                                                <td>{{ $value['status'] }}</td>
+                                                <td><a href="/admin/viewer/detail?id={{ $value['id'] }}">詳細</a></td>
+                                            </tr>
+                                        @endforeach
 
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

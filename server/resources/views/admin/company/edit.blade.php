@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">リクエスト作成</h1>
+            <h1 class="page-header">事務所編集</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -12,7 +12,7 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    作成<a href="/admin/request_list/list">戻る</a>
+                    作成<a href="/admin/company/list">戻る</a>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -27,36 +27,62 @@
                             </div>
                         @endif
 
-
-
-                        <form role="form" method="post" action="{{action('RequestListController@adminComplete')}}" class="form">
+                        <form role="form" method="post" action="{{action('CompanyController@adminUpdate')}}" class="form">
                             {{ csrf_field() }}
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label>ユーザーID</label>
-                                    <input class="form-control" name="user_id" placeholder="user_id" value="{{ old('user_id') }}">
+                                    <label>名前</label>
+                                    <input class="form-control" name="name" placeholder="名前" value="{{ $detail['name'] }}">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>cast_id</label>
-                                    <input class="form-control" name="cast_id" placeholder="cast_id" value="{{ old('cast_id') }}">
+                                    <label>email</label>
+                                    <input class="form-control" name="email" placeholder="メールアドレス" value="{{ $detail['email'] }}">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>to_name</label>
-                                    <input class="form-control" name="to_name" placeholder="to_name" value="{{ old('to_name') }}">
+                                    <label>password</label>
+                                    <input class="form-control" name="password" placeholder="パスワード" value="{{ old('password') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label>status</label>
-                                    <select name="status" class="form-control">
+                                    <label>権限</label>
+                                    <select name="authority" class="form-control">
                                         @foreach (config('const.authority') as $key => $value)
                                             <option value="{{ $key }}">{{ $value }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 
+                                <div class="form-group slider-container" style="width: 100%; display: grid; margin: 0 auto;">
+                                    <label>料金</label>
+                                    <?php
+                                        $price = 0;
+                                        if (!empty($detail['price'])) {
+                                            $price = $detail['price'];
+                                        }                                    
+                                    ?>
+                                    <input type="range" name="price" id="range" min="0" max="10000" step="100" value="{{ $price }}" class="form-control">
+                                    <p><span id="value">{{ $price }}</span><span>コイン</span></p>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        {!! Form::label('file', '動画アップロード', ['class' => 'control-label']) !!}
+                                        {!! Form::file('file') !!}
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-lg-6">
+
+                                <div class="form-group">
+                                    <label>所属事務所</label>
+                                    <select name="authority" class="form-control">
+                                        <option value="0">未選択</option>
+                                        @foreach ($company as $key => $value)
+                                            <option value="{{ $value['id'] }}">{{ $value['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
                                 <div data-toggle='buttons' id='menu' class="form-group">
                                     <label>ジャンル</label>
@@ -67,10 +93,17 @@
                                     @endforeach
                                 </div>
 
-
+                                <div class="form-group">
+                                    <label>期間</label>
+                                    <select name="period" class="form-control">
+                                        @foreach (config('const.period') as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="form-group">
                                     <label>説明</label>
-                                    <textarea name="request_detail" class="form-control">{{ old('request_detail') }}</textarea>
+                                    <textarea name="descript" class="form-control">{{ $detail['descript'] }}</textarea>
                                 </div>
                                 <input class="btn btn-primary" type="submit" value="送信" />
                             </div>

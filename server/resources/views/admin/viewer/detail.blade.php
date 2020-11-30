@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">リクエスト</h1>
+            <h1 class="page-header">キャスト詳細</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -14,7 +14,10 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> 未完了リクエスト
+                    <i class="fa fa-bar-chart-o fa-fw"></i>
+                    未完了リクエスト
+                    <a href="/admin/viewer/list">戻る</a>
+                    <a href="/admin/viewer/edit?id={{ $detail['id'] }}">編集</a>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -30,8 +33,32 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>1111 </td>
-                                            <td>2222</td>
+                                            <td>name</td>
+                                            <td>{{ $detail['name'] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>hash_id</td>
+                                            <td>{{ $detail['hash_id'] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>status</td>
+                                            <td>{{ $detail['status'] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>email</td>
+                                            <td>{{ $detail['email'] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>barthbay</td>
+                                            <td>{{ $detail['barthbay'] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>sex</td>
+                                            <td>{{ $detail['sex'] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>coin</td>
+                                            <td>{{ $detail['coin'] }}</td>
                                         </tr>
                                         <tr>
                                             <td>1111 </td>
