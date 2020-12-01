@@ -20,6 +20,8 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('status');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('sns_id')->unique();
+            $table->tinyInteger('sns_type');
             $table->dateTime('barthbay');
             $table->tinyInteger('sex');
             $table->integer('coin')->default(0);

@@ -19,7 +19,6 @@ use App\Services\ProfileImageService;
 
 class CastController extends Controller
 {
-
     private $castService;
     private $profileImageService;
 
@@ -32,6 +31,56 @@ class CastController extends Controller
         $this->castService = $castService;
         $this->profileImageService = $profileImageService;
     }
+
+
+
+
+
+
+
+    /**
+    * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    * API管理者
+    * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    */
+
+    //キャスト一覧
+    public function apiSearch(Request $request)
+    {
+        $search_param['sort_type'] = $request->sort_type;
+        $search_param['free_word'] = $request->free_word;
+        $search_param['company_id'] = $request->company_id;
+        $search_param['category'] = $request->category;
+        $search_param['min_price'] = $request->min_price;
+        $search_param['max_price'] = $request->max_price;
+        $search_param['period'] = $request->period;
+        $search_param['min_total_post'] = $request->min_total_post;
+        $search_param['max_total_post'] = $request->max_total_post;
+        $search_param['min_get_coin'] = $request->min_get_coin;
+        $search_param['max_get_coin'] = $request->max_get_coin;
+        $list = $this->castService->castSearch($search_param);
+
+        return response()->json($list);
+    }
+
+    //キャスト詳細
+    public function apiDetail(Request $request)
+    {
+        $cast_id = $request->id;
+        $detail = CastAdmin::select('*')->where('id', $cast_id)->first()->toArray();
+        return response()->json($list);
+    }
+    
+
+
+
+
+
+
+
+
+
+
 
     public function index()
     {
@@ -128,8 +177,6 @@ class CastController extends Controller
     {
         $cast_id = $request->input('id');
         $detail = CastAdmin::select('*')->where('id', $cast_id)->first()->toArray();
-        log::debug("aaaaaa");
-        log::debug($detail);
         return view('/admin/cast/detail', compact('detail'));
     }
 
@@ -214,4 +261,41 @@ class CastController extends Controller
 
         return view('/cast_admin/cast/detail');
     }
+
+    // public function passwordEdit(Request $request)
+    // {
+    //     $user = Auth::user();
+    //     $user_id = $user->id;
+
+    //     $validator = Validator::make($request->all(), [
+    //         'new_password' => 'required|min:7|max:20',
+    //         'currnet_password' => 'required|min:7|max:20',
+    //     ]);
+    //     // バリデーションエラーだった場合
+    //     if ($validator->fails()) {
+    //         $error_info = $this->checkService->errorCheck(self::REQUEST_CHECK);
+
+    //         return response()->json($error_info);
+    //     }
+    //     //現在のパスワードチェック
+    //     if (!Hash::check($request->currnet_password, $user->password)) {
+    //         $error_info = $this->checkService->errorCheck(self::USED_PASSWORD_CHECK);
+
+    //         return response()->json($error_info);
+    //     }
+
+    //     DB::beginTransaction();
+    //     try {
+    //         $reslut = User::where('id', '=', $user_id)->update(['password' => Hash::make($request->new_password)]);
+    //         DB::commit();
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         report($e);
+    //         $error_info = $this->checkService->errorCheck(self::SERVER_CHECK);
+    //     }
+
+    //     return response()->json(['status' => 'OK']);
+    // }
+
+
 }

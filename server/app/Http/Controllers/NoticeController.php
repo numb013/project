@@ -16,52 +16,54 @@ class NoticeController extends Controller
 
     public function __construct(){}
 
- 
+    /**
+    * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    * API
+    * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    */
+    public function apiList(Request $request)
+    {
+        $user = Auth::user();
+        $user_id = $user->id;
+        $list = Notice::select('*')->where('id', $user_id)->get();
+        return response()->json($list);
+    }
+
+    public function apiDetail(Request $request)
+    {
+        $user = Auth::user();
+        $user_id = $user->id;
+        $notice_id = $request->id;
+        Notice::select('*')->where('id', $notice_id)->update(['confirmed' => 1]);
+        $detail = Notice::select('*')->where('id', $notice_id)->first();
+        return response()->json($detail);
+    }
+
+
     /**
     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     * 管理者
     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     */
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function adminCreate(Request $request)
     {
         return view('/admin/notice/create');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function adminConfirm(Request $request)
     {
         $input_data = $request->all();
         return view('/admin/notice/confirm', compact($input_data));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function adminComplete(Request $request)
     {
         Notice::create($request->all());
         return view('/admin/notice/list');
     }
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function adminList(Request $request)
     {
         $column = '*';
@@ -83,12 +85,6 @@ class NoticeController extends Controller
         return view('/admin/notice/list', compact('list'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function adminSearch(Request $request)
     {
         // $search_param['sort_type'] = $request->sort_type;
@@ -108,13 +104,6 @@ class NoticeController extends Controller
         return view('/admin/notice/list', compact('list'));
     }
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function adminDetail(Request $request)
     {
         $notice_id = $request->input('id');
@@ -122,11 +111,6 @@ class NoticeController extends Controller
         return view('/admin/notice/detail', compact('detail'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function adminEdit(Request $request)
     {
         $notice_id = $request->input('id');
@@ -134,11 +118,6 @@ class NoticeController extends Controller
         return view('/admin/notice/detail', compact('detail'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function adminUpdate(Request $request)
     {
         $notice_id = $request->id;

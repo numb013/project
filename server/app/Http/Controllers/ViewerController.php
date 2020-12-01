@@ -44,7 +44,15 @@ class ViewerController extends Controller
     {
         $user_id = $request->input('id');
         $detail = User::select('*')->where('id', $user_id)->first();
-        return view('/admin/viewer/edit', compact('detail'));
+        return response()->json($list);
+    }
+
+    public function apiMypage(Request $request)
+    {
+      $user = Auth::user();
+      $user_id = $user->id;
+      $detail = User::select('*')->where('id', $user_id)->first();
+      return response()->json($list);
     }
 
     /**
@@ -54,9 +62,10 @@ class ViewerController extends Controller
      */
     public function apiEdit(Request $request)
     {
-        $user_id = $request->input('id');
+        $user = Auth::user();
+        $user_id = $user->id;
         $detail = User::select('*')->where('id', $user_id)->first();
-        return view('/admin/viewer/edit', compact('detail'));
+        return response()->json($list);
     }
 
     /**
@@ -66,7 +75,8 @@ class ViewerController extends Controller
      */
     public function apiUpdate(Request $request)
     {
-        $user_id = $request->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $update_data = Arr::only($request->all(), [
             'user_id',
             'company_id',
@@ -239,22 +249,7 @@ class ViewerController extends Controller
               $error_info = $this->checkService->errorCheck(config('const.error_code.server'));
               return response()->json($error_info);
           }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        return view('/admin/viewer/detail');
+          return response()->json($list);
     }
 
 

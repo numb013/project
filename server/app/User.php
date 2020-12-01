@@ -37,4 +37,10 @@ class User extends Authenticatable implements JWTSubject // 追加
     {
         return [];
     }
+    // public function username()
+    // {
+    //     return 'login_id';
+    // }
+
+
 }

@@ -67,7 +67,15 @@ class CastService
         }
 
         if (!empty($search_param['category'])) {
-            $query->whereIn('cast_admins.category', $search_param['category']);
+            $query->where(function ($query) use ($search_param) {
+                foreach ($search_param['category'] as $key => $category) {
+                    if ($key == 0) {
+                        $query->whereRaw("FIND_IN_SET(?, category) > 0", $category);
+                    } else {
+                        $query->orwhereRaw("FIND_IN_SET(?, category) > 0", $category);
+                    }
+                }
+            });
         }
         if (!empty($search_param['status'])) {
             $query->whereIn('cast_admins.status', $search_param['status']);
