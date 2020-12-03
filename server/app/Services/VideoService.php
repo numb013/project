@@ -16,6 +16,11 @@ class VideoService
     ) {
         $this->googleCloudService = $googleCloudService;
     }
+    public function videoUpdate($param)
+    {
+        Video::where('id', $param['video_id'])->update(['state' => $param['state']]);
+    }
+
     public function videoUpload($request, $user_hash_id)
     {
         if ($request->file('video_file')->isValid([])) {
@@ -82,17 +87,17 @@ class VideoService
             }
 
             //フォルダ内に動画が既にある場合、削除する。
-            $exist_file = Storage::files($hash_id);
+            $exist_file = Storage::files($user_hash_id);
             if (!empty($exist_file)) {
-                Storage::deleteDirectory($hash_id);
+                Storage::deleteDirectory($user_hash_id);
             }
-            if (!is_dir(storage_path('app/'.$hash_id))) {
-                mkdir(storage_path('app/'.$hash_id));
+            if (!is_dir(storage_path('app/'.$user_hash_id))) {
+                mkdir(storage_path('app/'.$user_hash_id));
             }
             //一旦strageフォルダに保存
-            $url = Storage::disk('local')->put($hash_id, $file);
+            $url = Storage::disk('local')->put($user_hash_id, $file);
             $origin_movie_path = storage_path('app/'.$url);
-            $copy_movie_path = storage_path('app/'.$hash_id.'/movie.mp4');
+            $copy_movie_path = storage_path('app/'.$user_hash_id.'/movie.mp4');
             $storage_video = $ffmpeg->open($origin_movie_path);
             $format = new X264();
             $format->setAudioCodec('copy');
@@ -111,7 +116,8 @@ class VideoService
             $options[] = ['name' => $hash_id.'/up/'.$total_seconds_hash.'/view.mp4'];
             $this->googleCloudService->GoogleStorageMultiple($bucket_name, $path, $options);
             //NASから一時ファイルを削除
-            Storage::deleteDirectory($hash_id);
+            Storage::deleteDirectory($user_hash_id);
+
             $gcs_storage_url = 'https://storage.googleapis.com/';
             $data = [
                 // 'video_url' => secure_url('/').'/upload/'.$options[1]['name'],
@@ -146,6 +152,6 @@ class VideoService
             //     ->withErrors(['file' => 'アップロードされていないか不正なデータです。']);
             return false;
         }
-        return true;
+        return $data;
     }
 }

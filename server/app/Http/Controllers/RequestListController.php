@@ -10,6 +10,7 @@ use Log;
 use App\RequestList;
 use App\Services\RequestListService;
 use App\Services\VideoService;
+use App\Services\NoticeService;
 use App\User;
 
 class RequestListController extends Controller
@@ -17,15 +18,18 @@ class RequestListController extends Controller
 
     private $requestListService;
     private $videoService;
+    private $noticeService;
 
     public function __construct(
         RequestListService $requestListService,
-        VideoService $videoService
+        VideoService $videoService,
+        NoticeService $noticeService
     ) {
         // $this->middleware('auth');
         // $this->middleware('auth:cast_admin');
         $this->requestListService = $requestListService;
         $this->videoService = $videoService;
+        $this->noticeService = $noticeService;
     }
 
     /**
@@ -59,6 +63,7 @@ class RequestListController extends Controller
         return view('/admin/request_list/list', compact('list'));
     }
 
+    //管理者のリクエスト検索
     public function adminSearch(Request $request)
     {
         $search_param['sort_type'] = $request->sort_type;
@@ -74,6 +79,7 @@ class RequestListController extends Controller
         return view('/admin/request_list/list', compact('list'));
     }
 
+    //管理者のリクエスト詳細
     public function adminDetail(Request $request)
     {
         $request_list_id = $request->input('id');
@@ -81,6 +87,7 @@ class RequestListController extends Controller
         return view('/admin/request_list/detail', compact('detail'));
     }
 
+    //管理者のリクエスト編集画面
     public function adminEdit(Request $request)
     {
         $request_list_id = $request->input('id');
@@ -88,15 +95,31 @@ class RequestListController extends Controller
         return view('/admin/request_list/edit', compact('detail'));
     }
 
+    //管理者のリクエスト更新
     public function adminUpdate(Request $request)
     {
         $request_list_id = $request->id;
         $update_data =$this->requestListService->arrOnly($request->all());
         RequestList::where('id', $request_list_id)->update($update_data);
 
-        $search_param = [];
-        $list = $this->requestListService->requestSearch($search_param);
-        return view('/admin/request_list/list', compact('list'));
+        $request_list = RequestList::find($request_list_id);
+        if (!empty($request->video_id)) {
+            $video_param = [
+                'video_id' => $request->video_id,
+                'state' => $request->state,
+            ];
+            $this->videoService->videoUpdate($video_param);
+
+            $notice_param = [
+                'user_id' => $request_list->user_id,
+                'cast_id' => $request_list->cast_id,
+                'state' => $request->state,
+                'type' => 1,
+            ];
+            $this->noticeService->addNotice($notice_param);
+        }
+        $detail = RequestList::select('*')->where('id', $request_list_id)->first();
+        return view('/admin/request_list/detail', compact('detail'));
     }
 
 
@@ -109,6 +132,7 @@ class RequestListController extends Controller
     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     */
 
+    //キャストのリクエスト一覧
     public function castAdminList(Request $request)
     {
         $user = Auth::user();
@@ -120,6 +144,7 @@ class RequestListController extends Controller
         return view('/cast_admin/request_list/list', compact('list'));
     }
 
+    //キャストのリクエスト詳細
     public function castAdminDetail(Request $request)
     {
         $request_id = $request->input('id');
@@ -127,6 +152,7 @@ class RequestListController extends Controller
         return view('/cast_admin/request_list/detail', compact('detail'));
     }
 
+    //キャストのリクエスト編集
     public function castAdminEdit(Request $request)
     {
         $request_id = $request->input('id');
@@ -134,7 +160,7 @@ class RequestListController extends Controller
         return view('/cast_admin/request_list/detail', compact('detail'));
     }
 
-
+    //キャストの動画アップロード
     public function castAdminVideoUpload(Request $request)
     {
         $user = Auth::user();
@@ -145,6 +171,16 @@ class RequestListController extends Controller
             'status' => 1,
             'video_id' => $video_id,
         ]);
+
+        //リクエストの動画がアップされたら管理者にお知らせ
+        $notice_param = [
+            'user_id' => $request_list->user_id,
+            'cast_id' => $request_list->cast_id,
+            'state' => $request->state,
+            'type' => 2,
+        ];
+        $this->noticeService->addNotice($notice_data);
+
         return redirect('/cast_admin/request_list/detail/?id=' . $request_list_id);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
+use Imagick;
 
 class PostController extends Controller
 {
@@ -22,245 +23,221 @@ class PostController extends Controller
     }
 
     public function photoRegister(Request $request) {
-        // $validator = Validator::make($request->all(), [
-        //     'detail' => 'required|max:500',
-        //     'photo_file' => 'required|array',
-        //     'hash_val' => 'required|array',
-        //     'open_status' => 'required',
-        //     'comment_flg' => 'required',
-        // ]);
+        $validator = Validator::make($request->all(), [
+            'photo_file' => 'required|array',
+        ]);
 
-        // // バリデーションエラーだった場合
-        // if ($validator->fails()) {
-        //     $error_info = $this->checkService->errorCheck(self::REQUEST_CHECK);
-        //     return response()->json($error_info);
-        // }
+        $user = Auth::user();
+        $user_hash_id = $user->hash_id;
+        $user_id = $user->id;
+        $img_list = $request->photo_file;
 
-        // $user = Auth::user();
-        // $user_hash_id = $user->hash_id;
-        // $user_id = $user->id;
-        // $hash_val = $request->hash_val;
-        // $img_list = $request->photo_file;
+        $detail = $request->detail;
+        $detail = str_replace(array("\n\n\n"), "\n", $detail);
 
-        // if ($user->type !== UserType::Girl) {
-        //     $error_info = $this->checkService->errorCheck(self::ERROR_GIRL_ONLY);
-        //     return response()->json($error_info);
-        // }
 
-        // $detail = $request->detail;
-        // $detail = str_replace(array("\n\n\n"), "\n", $detail);
 
-        // //禁止ワードチェック
-        // $ban_words = config('const.ban_words');
-        // str_replace($ban_words, $ban_words, $detail, $count);
-        // if ($count > 0) {
-        //     $error_info = $this->checkService->errorCheck(self::BANWORD_CHECK);
-        //     return response()->json($error_info);
-        // }
-        // if (!is_dir(storage_path('app/'.$user_hash_id))) {
-        //     mkdir(storage_path('app/'.$user_hash_id));
-        // }
+        $photo_num = 0;
+        foreach ($img_list as $img) {
+            $photo_num++;
+            //文字列削除
+            if (strpos($img, 'data:image/png;base64') !== false) {
+                $img = str_replace('data:image/png;base64,', '', $img);
+            } elseif (strpos($img, 'data:image/jpeg;base64') !== false) {
+                $img = str_replace('data:image/jpeg;base64,', '', $img);
+            }
+            $img = str_replace(' ', '+', $img);
 
-        // $photo_num = 0;
-        // foreach ($img_list as $img) {
-        //     $photo_num++;
-        //     //文字列削除
-        //     if (strpos($img, 'data:image/png;base64') !== false) {
-        //         $img = str_replace('data:image/png;base64,', '', $img);
-        //     } elseif (strpos($img, 'data:image/jpeg;base64') !== false) {
-        //         $img = str_replace('data:image/jpeg;base64,', '', $img);
-        //     }
-        //     $img = str_replace(' ', '+', $img);
+            $fileData = base64_decode($img);
+            $tmp_path = storage_path('app/'.$user_hash_id.'/tmp'.$photo_num.'.jpg');
+            $tmp_path_list[$photo_num] = $tmp_path;
+            file_put_contents($tmp_path, $fileData);
+        }
 
-        //     $fileData = base64_decode($img);
-        //     $tmp_path = storage_path('app/'.$user_hash_id.'/tmp'.$photo_num.'.jpg');
-        //     $tmp_path_list[$photo_num] = $tmp_path;
-        //     file_put_contents($tmp_path, $fileData);
-        // }
+        try {
+            //720px*720pxにリサイズ
+            $storage_ffmpeg_path = storage_path('app/'.$user_hash_id);
+            $width = 720;
+            $height = 720;
+            foreach ($tmp_path_list as $key => $tmp_name) {
+                if (!(empty($tmp_name))) {
+                    $image = new Imagick($tmp_name);
+                    $profiles = $image->getImageProfiles("icc", true);
+                    $image->setCompression(imagick::COMPRESSION_JPEG);
+                    $image->setCompressionQuality(90);
+                    $image->stripImage();
+                    if (!empty($profiles)) {
+                        $image->profileImage("icc", $profiles['icc']);
+                    }
+                    $image->scaleImage($width, $height);
+                    $image_path = $storage_ffmpeg_path.'/'.$key.'.jpg';
+                    $path[] = $image_path;
+                    $image->writeImage($image_path);
+                }
+            }
 
-        // try {
-        //     //720px*720pxにリサイズ
-        //     $storage_ffmpeg_path = storage_path('app/'.$user_hash_id);
-        //     $width = 720;
-        //     $height = 720;
-        //     foreach ($tmp_path_list as $key => $tmp_name) {
-        //         if (!(empty($tmp_name))) {
-        //             $image = new Imagick($tmp_name);
-        //             $profiles = $image->getImageProfiles("icc", true);
-        //             $image->setCompression(imagick::COMPRESSION_JPEG);
-        //             $image->setCompressionQuality(90);
-        //             $image->stripImage();
-        //             if (!empty($profiles)) {
-        //                 $image->profileImage("icc", $profiles['icc']);
-        //             }
-        //             $image->scaleImage($width, $height);
-        //             $image_path = $storage_ffmpeg_path.'/'.$key.'.jpg';
-        //             $path[] = $image_path;
-        //             $image->writeImage($image_path);
-        //         }
-        //     }
+            //サムネイル作成
+            $thumbnail_width = 360;
+            $thumbnail_height = 360;
+            $thumbnail = new Imagick($tmp_path_list[1]);
+            $thumbnail_profiles = $thumbnail->getImageProfiles("icc", true);
+            $thumbnail->setCompression(imagick::COMPRESSION_JPEG);
+            $thumbnail->setCompressionQuality(90);
+            $thumbnail->stripImage();
+            if (!empty($thumbnail_profiles)) {
+                $thumbnail->profileImage("icc", $thumbnail_profiles['icc']);
+            }
+            $thumbnail_path = $storage_ffmpeg_path.'/thumbnail.jpg';
+            $path[] = $thumbnail_path;
+            $thumbnail->scaleImage($thumbnail_width, $thumbnail_height);
+            $thumbnail->writeImage($thumbnail_path);
 
-        //     //サムネイル作成
-        //     $thumbnail_width = 360;
-        //     $thumbnail_height = 360;
-        //     $thumbnail = new Imagick($tmp_path_list[1]);
-        //     $thumbnail_profiles = $thumbnail->getImageProfiles("icc", true);
-        //     $thumbnail->setCompression(imagick::COMPRESSION_JPEG);
-        //     $thumbnail->setCompressionQuality(90);
-        //     $thumbnail->stripImage();
-        //     if (!empty($thumbnail_profiles)) {
-        //         $thumbnail->profileImage("icc", $thumbnail_profiles['icc']);
-        //     }
-        //     $thumbnail_path = $storage_ffmpeg_path.'/thumbnail.jpg';
-        //     $path[] = $thumbnail_path;
-        //     $thumbnail->scaleImage($thumbnail_width, $thumbnail_height);
-        //     $thumbnail->writeImage($thumbnail_path);
+            //DB登録
+            $created_at = !empty($request->created_at) ? $request->created_at : date('Y/m/d H:i:s');
 
-        //     //DB登録
-        //     $created_at = !empty($request->created_at) ? $request->created_at : date('Y/m/d H:i:s');
-        //     $data = [
-        //         'user_id' => $user_id,
-        //         'type' => PostType::Photo,
-        //         'state' =>PostState::Publishing,
-        //         'detail' => $detail,
-        //         'photo_num' => $photo_num,
-        //         'comment_disabled' => $request->comment_flg,
-        //         'open_flg' => $request->open_status,
-        //         'created_at' => $created_at,
-        //     ];
+            $data = [
+                'user_id' => $user_id,
+                'type' => PostType::Photo,
+                'state' =>PostState::Publishing,
+                'detail' => $detail,
+                'photo_num' => $photo_num,
+                'comment_disabled' => $request->comment_flg,
+                'open_flg' => $request->open_status,
+                'created_at' => $created_at,
+            ];
 
-        //     $post_hash_id = $this->postService->insertPost($data, $hash_val);
+            $post_hash_id = $this->postService->insertPost($data, $hash_val);
 
-        //     if ($post_hash_id == false) {
-        //         $error_info = $this->checkService->errorCheck(self::SERVER_CHECK);
-        //         return response()->json($error_info);
-        //     }
-        //     if (!empty($post_hash_id)) {
-        //         //googleCouldStorageに保存する名前作成
-        //         $path_count = count($path);
-        //         foreach ($path as $key => $path_value) {
-        //             $cnt = $key + 1;
-        //             if ($path_count == $cnt) {
-        //                 $options[] = [
-        //                     'name' => $user_hash_id.'/photo/'.$post_hash_id.'/thumbnail.jpg',
-        //                     'metadata' => ['cacheControl' => 'public,max-age=86400, no-transform']
-        //                 ];
-        //             } else {
-        //                 $options[] = [
-        //                     'name' => $user_hash_id.'/photo/'.$post_hash_id.'/'.$cnt.'.jpg',
-        //                     'metadata' => ['cacheControl' => 'public,max-age=86400, no-transform']
-        //                 ];
-        //             }
-        //         }
-        //         // バケットの名前を入力
-        //         $bucket_name = config('filesystems.gcs.content_bucket_name');
-        //         $this->googleCloudService->GoogleStorageMultiple($bucket_name, $path, $options);
+            if ($post_hash_id == false) {
+                $error_info = $this->checkService->errorCheck(self::SERVER_CHECK);
+                return response()->json($error_info);
+            }
+            if (!empty($post_hash_id)) {
+                //googleCouldStorageに保存する名前作成
+                $path_count = count($path);
+                foreach ($path as $key => $path_value) {
+                    $cnt = $key + 1;
+                    if ($path_count == $cnt) {
+                        $options[] = [
+                            'name' => $user_hash_id.'/photo/'.$post_hash_id.'/thumbnail.jpg',
+                            'metadata' => ['cacheControl' => 'public,max-age=86400, no-transform']
+                        ];
+                    } else {
+                        $options[] = [
+                            'name' => $user_hash_id.'/photo/'.$post_hash_id.'/'.$cnt.'.jpg',
+                            'metadata' => ['cacheControl' => 'public,max-age=86400, no-transform']
+                        ];
+                    }
+                }
+                // バケットの名前を入力
+                $bucket_name = config('filesystems.gcs.content_bucket_name');
+                $this->googleCloudService->GoogleStorageMultiple($bucket_name, $path, $options);
 
-        //         // 同時アップロードの処理
-        //         if (!empty($request->blog_sync)) {
-        //             $blog_sync = json_decode($request->blog_sync);
-        //             $subject = $blog_sync[0]->title;
-        //             $emails = [];
-        //             foreach ($blog_sync[0]->blog_email_sync as $key => $value) {
-        //                 if ($value->sync == 1) {
-        //                     if(strpos($value->email,'cityheaven') === false){
-        //                         $emails[] = $value->email;
-        //                     } else {
-        //                         $this->sendMailService->photoBlogSendMail($subject, $detail, $value->email, $tmp_path_list);
-        //                     }
-        //                 }
-        //             }
-        //             if (!empty($emails)) {
-        //                 $this->sendMailService->photoBlogSendMail($subject, $detail, $emails, $tmp_path_list);
-        //             }
-        //         }
-        //         // NASから一時ファイルを削除
-        //         Storage::deleteDirectory($user_hash_id);
-        //     }
-        // } catch (\Exception $e) {
-        //     report($e);
-        //     $dir = storage_path('app/error_image_'.$user_hash_id);
-        //     // フォルダなければ作成
-        //     if(!file_exists($dir)){
-        //         mkdir($dir, 0700);
-        //     }
-        //     copy($tmp_name, storage_path('app/error_image_'.$user_hash_id . '/'. date("YmdHis") .'.jpg'));
-        //     $error_info = $this->checkService->errorCheck(self::SERVER_CHECK);
-        //     return response()->json($error_info);
-        // }
+                // 同時アップロードの処理
+                if (!empty($request->blog_sync)) {
+                    $blog_sync = json_decode($request->blog_sync);
+                    $subject = $blog_sync[0]->title;
+                    $emails = [];
+                    foreach ($blog_sync[0]->blog_email_sync as $key => $value) {
+                        if ($value->sync == 1) {
+                            if(strpos($value->email,'cityheaven') === false){
+                                $emails[] = $value->email;
+                            } else {
+                                $this->sendMailService->photoBlogSendMail($subject, $detail, $value->email, $tmp_path_list);
+                            }
+                        }
+                    }
+                    if (!empty($emails)) {
+                        $this->sendMailService->photoBlogSendMail($subject, $detail, $emails, $tmp_path_list);
+                    }
+                }
+                // NASから一時ファイルを削除
+                Storage::deleteDirectory($user_hash_id);
+            }
+        } catch (\Exception $e) {
+            report($e);
+            $dir = storage_path('app/error_image_'.$user_hash_id);
+            // フォルダなければ作成
+            if(!file_exists($dir)){
+                mkdir($dir, 0700);
+            }
+            copy($tmp_name, storage_path('app/error_image_'.$user_hash_id . '/'. date("YmdHis") .'.jpg'));
+            $error_info = $this->checkService->errorCheck(self::SERVER_CHECK);
+            return response()->json($error_info);
+        }
 
-        // DB::beginTransaction();
-        // try {
-        //     //同時投稿があればgirlテーブルにアドレス保存
-        //     if (!empty($request->blog_sync)) {
-        //         $blog_sync = json_decode($request->blog_sync);
-        //         $blog_email_sync = json_encode($blog_sync[0]->blog_email_sync);
-        //         Girl::find($user_id)->fill(['blog_mail_address' => $blog_email_sync])->save();
-        //     }
-        //     // 画像の投稿数加算
-        //     Girl::where('id', $user_id)->increment('total_photo_count', 1);
+        DB::beginTransaction();
+        try {
+            //同時投稿があればgirlテーブルにアドレス保存
+            if (!empty($request->blog_sync)) {
+                $blog_sync = json_decode($request->blog_sync);
+                $blog_email_sync = json_encode($blog_sync[0]->blog_email_sync);
+                Girl::find($user_id)->fill(['blog_mail_address' => $blog_email_sync])->save();
+            }
+            // 画像の投稿数加算
+            Girl::where('id', $user_id)->increment('total_photo_count', 1);
 
-        //     $post_info = Post::where('hash_id', '=', $post_hash_id)->where('state', '=', PostState::Publishing)->first();
-        //     if ($post_info->created_at < date('Y-m-d H:i:s')) {
-        //         $content = '投稿が完了しました。';
-        //         Notification::create([
-        //             'to_user_id' => $user_id,
-        //             'confirmed' => NotificationsConfirmation::Unconfirmed,
-        //             'type' => NotificationsType::System,
-        //             'content' => $content
-        //         ]);
+            $post_info = Post::where('hash_id', '=', $post_hash_id)->where('state', '=', PostState::Publishing)->first();
+            if ($post_info->created_at < date('Y-m-d H:i:s')) {
+                $content = '投稿が完了しました。';
+                Notification::create([
+                    'to_user_id' => $user_id,
+                    'confirmed' => NotificationsConfirmation::Unconfirmed,
+                    'type' => NotificationsType::System,
+                    'content' => $content
+                ]);
 
-        //         //視聴者に投稿お知らせ
-        //         $post_id = $this->postService->decodePostHashid($post_hash_id);
-        //         $name = Girl::find($user_id)->name;
-        //         DB::insert('
-        //             insert into notifications(
-        //                 from_user_id,
-        //                 to_user_id,
-        //                 confirmed,
-        //                 post_id,
-        //                 type,
-        //                 content,
-        //                 created_at
-        //             )
-        //             select
-        //                 ' . $user_id .',
-        //                 from_id,
-        //                 ' . NotificationsConfirmation::Unconfirmed .',
-        //                 ' . $post_id .',
-        //                 ' . NotificationsType::NewPosts .',
-        //                 "' . $name . 'さんが投稿しました。",
-        //                 "' . now() . '"
-        //             from
-        //                 follow
-        //             where
-        //                 to_id = ' . $user_id .'
-        //             and subscribe_post = 1'
-        //         );
+                //視聴者に投稿お知らせ
+                $post_id = $this->postService->decodePostHashid($post_hash_id);
+                $name = Girl::find($user_id)->name;
+                DB::insert('
+                    insert into notifications(
+                        from_user_id,
+                        to_user_id,
+                        confirmed,
+                        post_id,
+                        type,
+                        content,
+                        created_at
+                    )
+                    select
+                        ' . $user_id .',
+                        from_id,
+                        ' . NotificationsConfirmation::Unconfirmed .',
+                        ' . $post_id .',
+                        ' . NotificationsType::NewPosts .',
+                        "' . $name . 'さんが投稿しました。",
+                        "' . now() . '"
+                    from
+                        follow
+                    where
+                        to_id = ' . $user_id .'
+                    and subscribe_post = 1'
+                );
 
-        //         $ids = Follow::select('users.id')
-        //             ->join('users', 'users.id', '=', 'follow.from_id')
-        //             ->where('follow.to_id', '=', $user_id)
-        //             ->where('follow.subscribe_post', '=', 1)
-        //             ->get()->toArray();
-        //         $user_ids = array_column($ids, 'id');
-        //         $message = $name . 'さんが投稿しました。';
-        //         $param = 'timeline/'. $user_hash_id . '?photo=' . $post_hash_id;
-        //         $url = config('app.app_url') . $param;
-        //         $this->notificationService->push_notice($user_ids, 'post', $message, $url);
-        //     }
+                $ids = Follow::select('users.id')
+                    ->join('users', 'users.id', '=', 'follow.from_id')
+                    ->where('follow.to_id', '=', $user_id)
+                    ->where('follow.subscribe_post', '=', 1)
+                    ->get()->toArray();
+                $user_ids = array_column($ids, 'id');
+                $message = $name . 'さんが投稿しました。';
+                $param = 'timeline/'. $user_hash_id . '?photo=' . $post_hash_id;
+                $url = config('app.app_url') . $param;
+                $this->notificationService->push_notice($user_ids, 'post', $message, $url);
+            }
 
-        //     DB::commit();
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     report($e);
-        //     $error_info = $this->checkService->errorCheck(self::SERVER_CHECK);
-        //     return response()->json($error_info);
-        // }
-        // //Pub/Subに送信
-        // $this->pubsubService->userPuSubUpdate($user_hash_id);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            report($e);
+            $error_info = $this->checkService->errorCheck(self::SERVER_CHECK);
+            return response()->json($error_info);
+        }
+        //Pub/Subに送信
+        $this->pubsubService->userPuSubUpdate($user_hash_id);
 
-        // return response()->json(['post_hash_id' => $post_hash_id]);
+        return response()->json(['post_hash_id' => $post_hash_id]);
     }
 
     public function MovieUpload(Request $request) {

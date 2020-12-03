@@ -5,7 +5,7 @@ use App\ProfileImage;
 use DB;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\GoogleCloudService;
-
+use Illuminate\Support\Facades\Storage;
 class ProfileImageService
 {
 
@@ -42,12 +42,17 @@ class ProfileImageService
               'updated_at' => now()
             ]);
 
+            // NASから一時ファイルを削除
+            Storage::deleteDirectory($filename);
 
         } else {
-            // return redirect()
-            //     ->back()
-            //     ->withInput()
-            //     ->withErrors(['file' => 'アップロードされていないか不正なデータです。']);
+            report($e);
+            $dir = storage_path('app/error_image_'.$user_hash_id);
+            // フォルダなければ作成
+            if(!file_exists($dir)){
+                mkdir($dir, 0700);
+            }
+            copy($tmp_name, storage_path('app/error_image_'.$user_hash_id . '/'. date("YmdHis") .'.jpg'));
             return false;
         }
         return true;
