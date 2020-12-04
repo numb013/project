@@ -112,7 +112,7 @@
         <div class="col-lg-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> 未完了リクエスト
+                    <i class="fa fa-bar-chart-o fa-fw"></i> 新着リクエスト
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -129,15 +129,14 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-
+                                    @foreach ($list['new_list']['request_list'] as $key => $value)
                                         <tr>
-                                            <td>1111 </td>
-                                            <td>2222</td>
-                                            <td>222222</td>
-                                            <td><a href="/admin/nanpa_place/admin_detail?id=1">編集</a></td>
-
+                                            <td>{{ $value['id'] }}</td>
+                                            <td>{{ $value['id'] }}</td>
+                                            <td>{{ $value['id'] }}</td>
+                                            <td><a href="/admin/request_list/detail?id={{ $value['id'] }}">編集</a></td>
                                         </tr>
-
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -155,7 +154,7 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> 未完了リクエスト
+                    <i class="fa fa-bar-chart-o fa-fw"></i> 新着視聴者
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -172,15 +171,14 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-
-                                        <tr>
-                                            <td>1111 </td>
-                                            <td>2222</td>
-                                            <td>222222</td>
-                                            <td><a href="/admin/nanpa_place/admin_detail?id=1">編集</a></td>
-
-                                        </tr>
-
+                                        @foreach ($list['new_list']['viewer''] as $key => $value)
+                                            <tr>
+                                                <td>{{ $value['id'] }}</td>
+                                                <td>{{ $value['id'] }}</td>
+                                                <td>{{ $value['id'] }}</td>
+                                                <td><a href="/admin/viewer/detail?id={{ $value['id'] }}">編集</a></td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -197,24 +195,22 @@
         <div class="col-lg-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-bell fa-fw"></i> 新規視聴者
+                    <i class="fa fa-bell fa-fw"></i> 新規キャスト
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="list-group">
-                        <a href="#" class="list-group-item">
-                            <i class="fa fa-comment fa-fw"></i> New Comment
-                                <span class="pull-right text-muted small"><em>4 minutes ago</em>
+                        @foreach ($list['new_list']['cast'] as $key => $value)
+                            <a href="/admin/cast/detail?id={{ $value['id'] }}" class="list-group-item">
+                                <i class="fa fa-comment fa-fw"></i> {{ $value['name'] }}
+                                <span class="pull-right text-muted small">
+                                    <em>4 minutes ago</em>
                                 </span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                <span class="pull-right text-muted small"><em>12 minutes ago</em>
-                                </span>
-                        </a>                                        
+                            </a>
+                        @endforeach
                     </div>
                     <!-- /.list-group -->
-                    <a href="#" class="btn btn-default btn-block">View All Alerts</a>
+                    <a href="/admin/cast/list" class="btn btn-default btn-block">View All Alerts</a>
                 </div>
                 <!-- /.panel-body -->
             </div>

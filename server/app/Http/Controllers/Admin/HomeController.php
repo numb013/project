@@ -51,7 +51,7 @@ class HomeController extends Controller
 
         $list['new_list'] = [
             'request_list' => $this->requestListService->requestSearch($search_param),
-            'cast_list' => $this->castService->castSearch($search_param),
+            'cast' => $this->castService->castSearch($search_param),
             'viewer' => $this->viewerService->viewerSearch($search_param),
             'company' => $this->companyService->companySearch($search_param),
         ];
