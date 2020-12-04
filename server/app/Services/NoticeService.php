@@ -10,9 +10,9 @@ use Vinkla\Hashids\Facades\Hashids;
 class NoticeService
 {
     public function __construct(
-        BankBranchMst $bank_branch_mst
+
     ) {
-        $this->bankBranchMst = $bank_branch_mst;
+
     }
     public function addNotice($param)
     {
