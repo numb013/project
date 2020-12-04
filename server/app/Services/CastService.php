@@ -17,6 +17,13 @@ class CastService
         $this->castAdmin = $castAdmin;
     }
 
+    public function castCount($param)
+    {
+        $cast_list = CastAdmin::get();
+        return $cast_list->count();
+    }
+
+
     public function arrOnly($request)
     {
         $request = Arr::only($request, [
@@ -120,13 +127,16 @@ class CastService
         if (!empty($search_param['free_word'])) {
             $query->orderBy('name_hit', 'desc');
         }
-        if (!empty($search_param['sort_type'])) {
-            if ($search_param['sort_type'] == 1) {
-                $query->orderBy('get_coin', 'desc');
-            } elseif ($search_param['sort_type'] == 2) {
-                $query->orderBy('total_post', 'desc');
-            } elseif ($search_param['sort_type'] == 3) {
-                $query->orderBy('price', 'desc');
+        if (!empty($search_param['sort_column']) && !empty($search_param['sort_order'])) {
+            $query->orderBy('cast_admins.'. $search_param['sort_column'] , $search_param['sort_order']);
+        }
+
+        if (!empty($search_param['limit'])) {
+            $query->limit($search_param['limit']);
+            if ($page_no != 1) {
+                $page_no = $page_no - 1;
+                $offset = ($search_param['limit'] * $page_no);
+                $query->offset($offset);
             }
         }
 

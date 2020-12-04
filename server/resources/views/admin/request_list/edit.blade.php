@@ -84,10 +84,10 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label>再提出の場合のメッセージ</label>
-                                                        @if($errors->has('check_memo'))
-                                                            {{ $errors->first('check_memo') }}<br>
+                                                        @if($errors->has('check_message'))
+                                                            {{ $errors->first('check_message') }}<br>
                                                         @endif 
-                                                        <textarea name="descript" class="form-control">{{ old('check_memo') }}</textarea>
+                                                        <textarea name="descript" class="form-control">{{ old('check_message') }}</textarea>
                                                     </div>
                                                     <input type="hidden" name="id" value="{{ $detail['id'] }}">
                                                     <input class="btn btn-primary" type="submit" value="送信" />

@@ -17,6 +17,12 @@ class ViewerService
         $this->user = $user;
     }
 
+    public function viewerCount($param)
+    {
+        $viewer_list = User::get();
+        return $viewer_list->count();
+    }
+
     public function arrOnly($request)
     {
         $request = Arr::only($request, [
@@ -76,7 +82,18 @@ class ViewerService
         if (!empty($search_param['free_word'])) {
             $query->orderBy('name_hit', 'desc');
         }
+        if (!empty($search_param['sort_column']) && !empty($search_param['sort_order'])) {
+            $query->orderBy('users.'. $search_param['sort_column'] , $search_param['sort_order']);
+        }
 
+        if (!empty($search_param['limit'])) {
+            $query->limit($search_param['limit']);
+            if ($page_no != 1) {
+                $page_no = $page_no - 1;
+                $offset = ($search_param['limit'] * $page_no);
+                $query->offset($offset);
+            }
+        }
         $query->orderBy('created_at', 'desc');
         $list = $query->get();
         if ($list) {

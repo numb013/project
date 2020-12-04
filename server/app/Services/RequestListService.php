@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use App\RequestList;
+use App\ManageRequestMessage;
 use DB;
 use Log;
 use Vinkla\Hashids\Facades\Hashids;
@@ -11,6 +12,12 @@ class RequestListService
 {
     public function __construct(
     ) {
+    }
+
+    public function requestCount($param)
+    {
+        $request_list = RequestList::get();
+        return $request_list->count();
     }
 
     public function arrOnly($request)
@@ -34,14 +41,26 @@ class RequestListService
         $query->join('cast_admins', 'cast_admins.id', '=', 'request_lists.cast_id');
         $query->where('request_lists.id', $request_list_id);
         $detail = $query->first();
+
+        $query->leftjoin('request_check_message', 'request_check_message.request_list_id', '=', 'request_lists.id');
+
+        $column = 'request_check_message.*';
+        $request_check_message = ManageRequestMessage::select(DB::raw($column))
+            ->where('request_list_id', $request_list_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+            if ($request_check_message) {
+            $detail['request_check_message'] = $request_check_message->toArray();
+        } else {
+            $detail['request_check_message'] = [];
+        }
+
         return $detail;
     }
-
+    
     public function requestSearch($search_param)
     {
-
-
-
         $column = 'request_lists.*';
         $column .= ', users.name as viewer_name, cast_admins.name as cast_name';
         if (!empty($search_param['free_word'])) {
@@ -65,6 +84,19 @@ class RequestListService
 
         if (!empty($search_param['free_word'])) {
             $query->orderBy('name_hit', 'desc');
+        }
+
+        if (!empty($search_param['sort_column']) && !empty($search_param['sort_order'])) {
+            $query->orderBy('request_lists.'. $search_param['sort_column'] , $search_param['sort_order']);
+        }
+
+        if (!empty($search_param['limit'])) {
+            $query->limit($search_param['limit']);
+            if ($page_no != 1) {
+                $page_no = $page_no - 1;
+                $offset = ($search_param['limit'] * $page_no);
+                $query->offset($offset);
+            }
         }
 
         $request_list = $query->get();

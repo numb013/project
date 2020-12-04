@@ -15,6 +15,12 @@ class CompanyService
         $this->company = $company;
     }
 
+    public function companyCount($param)
+    {
+        $company_list = Company::get();
+        return $company_list->count();
+    }
+
     public function arrOnly($request)
     {
         $request = Arr::only($request, [
@@ -35,7 +41,7 @@ class CompanyService
         return $request;
     }
 
-    public function castSearch($search_param)
+    public function companySearch($search_param)
     {
         $column = 'companies.*';
         if (!empty($search_param['free_word'])) {

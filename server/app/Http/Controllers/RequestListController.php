@@ -12,6 +12,7 @@ use App\Services\RequestListService;
 use App\Services\VideoService;
 use App\Services\NoticeService;
 use App\User;
+use App\ManageRequestMessage;
 
 class RequestListController extends Controller
 {
@@ -83,7 +84,7 @@ class RequestListController extends Controller
     public function adminDetail(Request $request)
     {
         $request_list_id = $request->input('id');
-        $detail = RequestList::select('*')->where('id', $request_list_id)->first();
+        $detail = $this->requestListService->requestDetail($request_list_id);
         return view('/admin/request_list/detail', compact('detail'));
     }
 
@@ -95,12 +96,37 @@ class RequestListController extends Controller
         return view('/admin/request_list/edit', compact('detail'));
     }
 
+    //管理者のリクエストチェックメッセージ返信
+    public function adminManageRequestMessage(Request $request)
+    {
+        $admin = Auth::user();
+        $request_list_id = $request->id;
+        $request_check_message_param = [
+            'request_list_id' => $request_list_id,
+            'admin_id' => $admin->id,
+            'confirmed' => 0,
+            'message' => $request->check_message,
+        ];
+        ManageRequestMessage::create($request_check_message_param);
+
+        $detail = $this->requestListService->requestDetail($request_list_id);
+        return view('/cast_admin/request_list/detail', compact('detail'));
+    }
+
     //管理者のリクエスト更新
     public function adminUpdate(Request $request)
     {
+        $admin = Auth::user();
         $request_list_id = $request->id;
         $update_data =$this->requestListService->arrOnly($request->all());
         RequestList::where('id', $request_list_id)->update($update_data);
+
+        //再提出の場合はメッセージ必須
+        if ($request->state == 2) {
+            if (empty($request->check_message)) {
+
+            }
+        }
 
         $request_list = RequestList::find($request_list_id);
         if (!empty($request->video_id)) {
@@ -117,8 +143,17 @@ class RequestListController extends Controller
                 'type' => 1,
             ];
             $this->noticeService->addNotice($notice_param);
+
+            $request_check_message_param = [
+                'request_list_id' => $request_list_id,
+                'admin_id' => $admin->id,
+                'confirmed' => 0,
+                'message' => $request->check_memo,
+            ];
+            ManageRequestMessage::create($request_check_message_param);
         }
-        $detail = RequestList::select('*')->where('id', $request_list_id)->first();
+
+        $detail = $this->requestListService->requestDetail($request_list_id);
         return view('/admin/request_list/detail', compact('detail'));
     }
 
@@ -139,24 +174,40 @@ class RequestListController extends Controller
 
         $search_param['cast_id'] = $user->id;
         $list = $this->requestListService->requestSearch($search_param);
-        Log::debug("dddddddddddddddddd");
-        Log::debug($list);
         return view('/cast_admin/request_list/list', compact('list'));
     }
 
     //キャストのリクエスト詳細
     public function castAdminDetail(Request $request)
     {
-        $request_id = $request->input('id');
-        $detail = RequestList::select('*')->where('id', $request_id)->first();
+        $request_list_id = $request->input('id');
+        $detail = $this->requestListService->requestDetail($request_list_id);
         return view('/cast_admin/request_list/detail', compact('detail'));
     }
 
     //キャストのリクエスト編集
     public function castAdminEdit(Request $request)
     {
-        $request_id = $request->input('id');
-        $detail = RequestList::select('*')->where('id', $request_id)->first();
+        $request_list_id = $request->input('id');
+        $detail = $this->requestListService->requestDetail($request_list_id);
+        return view('/cast_admin/request_list/detail', compact('detail'));
+    }
+
+
+    //キャストのリクエストチェックメッセージ返信
+    public function castAdminManageRequestMessage(Request $request)
+    {
+        $cast = Auth::user();
+        $request_list_id = $request->id;
+        $request_check_message_param = [
+            'request_list_id' => $request_list_id,
+            'cast_id' => $cast->id,
+            'confirmed' => 0,
+            'message' => $request->check_message,
+        ];
+        ManageRequestMessage::create($request_check_message_param);
+
+        $detail = $this->requestListService->requestDetail($request_list_id);
         return view('/cast_admin/request_list/detail', compact('detail'));
     }
 

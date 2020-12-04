@@ -19,12 +19,12 @@
                             <i class="fa fa-comments fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">26</div>
+                            <div class="huge">{{ $list['count']['request_list'] }}</div>
                             <div>リクエスト数</div>
                         </div>
                     </div>
                 </div>
-                <a href="#" style="color: #b73363;">
+                <a href="/admin/request_list/list" style="color: #b73363;">
                     <div class="panel-footer">
                         <span class="pull-left">View Details</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -42,12 +42,12 @@
                             <i class="fa fa-comments fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">26</div>
-                            <div>リクエスト数</div>
+                            <div class="huge">{{ $list['count']['viewer'] }}</div>
+                            <div>視聴者数</div>
                         </div>
                     </div>
                 </div>
-                <a href="#" style="color: #b73363;">
+                <a href="/admin/viewer/list" style="color: #b73363;">
                     <div class="panel-footer">
                         <span class="pull-left">View Details</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -65,12 +65,12 @@
                             <i class="fa fa-comments fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">26</div>
-                            <div>リクエスト数</div>
+                            <div class="huge">{{ $list['count']['cast'] }}</div>
+                            <div>キャスト数</div>
                         </div>
                     </div>
                 </div>
-                <a href="#" style="color: #b73363;">
+                <a href="/admin/cast/list" style="color: #b73363;">
                     <div class="panel-footer">
                         <span class="pull-left">View Details</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -88,12 +88,12 @@
                             <i class="fa fa-comments fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">26</div>
-                            <div>リクエスト数</div>
+                            <div class="huge">{{ $list['count']['company'] }}</div>
+                            <div>事務所数</div>
                         </div>
                     </div>
                 </div>
-                <a href="#" style="color: #b73363;">
+                <a href="/admin/company/list" style="color: #b73363;">
                     <div class="panel-footer">
                         <span class="pull-left">View Details</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
