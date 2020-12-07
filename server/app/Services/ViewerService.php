@@ -17,7 +17,7 @@ class ViewerService
         $this->user = $user;
     }
 
-    public function viewerCount($param)
+    public function viewerCount()
     {
         $viewer_list = User::get();
         return $viewer_list->count();
@@ -40,7 +40,7 @@ class ViewerService
 
     public function viewerSearch($search_param)
     {
-        $column = 'users.id, hash_id,name,status,email,password,barthbay,sex,coin';
+        $column = 'users.id, hash_id,name,status,email,password,barthbay,sex,coin, created_at';
         if (!empty($search_param['free_word'])) {
             $column.= ', CASE WHEN users.name like "%' . $search_param['free_word']. '%" THEN 1 ELSE 0 END as name_hit';
         }
@@ -88,8 +88,8 @@ class ViewerService
 
         if (!empty($search_param['limit'])) {
             $query->limit($search_param['limit']);
-            if ($page_no != 1) {
-                $page_no = $page_no - 1;
+            if ($search_param['page_no'] != 1) {
+                $page_no = $search_param['page_no'] - 1;
                 $offset = ($search_param['limit'] * $page_no);
                 $query->offset($offset);
             }

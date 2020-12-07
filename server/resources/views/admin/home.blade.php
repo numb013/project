@@ -122,18 +122,22 @@
                                 <table class="table table-bordered table-hover table-striped">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th>Amount</th>
+                                        <th>状態</th>
+                                        <th>視聴者名</th>
+                                        <th>キャスト名</th>
+                                        <th>期限</th>
+                                        <th>作成日</th>
+                                        <th>詳細</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     @foreach ($list['new_list']['request_list'] as $key => $value)
                                         <tr>
-                                            <td>{{ $value['id'] }}</td>
-                                            <td>{{ $value['id'] }}</td>
-                                            <td>{{ $value['id'] }}</td>
+                                            <td>{{ $value['status'] }}</td>
+                                            <td>{{ $value['viewer_name'] }}</td>
+                                            <td>{{ $value['cast_name'] }}</td>
+                                            <td>{{ $value['period'] }}</td>
+                                            <td>{{ $value['created_at'] }}</td>
                                             <td><a href="/admin/request_list/detail?id={{ $value['id'] }}">編集</a></td>
                                         </tr>
                                     @endforeach
@@ -164,18 +168,18 @@
                                 <table class="table table-bordered table-hover table-striped">
                                     <thead>
                                     <tr>
+                                        <th>ニックネーム</th>
+                                        <th>性別</th>
+                                        <th>作成日</th>
                                         <th>#</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th>Amount</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($list['new_list']['viewer''] as $key => $value)
+                                        @foreach ($list['new_list']['viewer'] as $key => $value)
                                             <tr>
-                                                <td>{{ $value['id'] }}</td>
-                                                <td>{{ $value['id'] }}</td>
-                                                <td>{{ $value['id'] }}</td>
+                                                <td>{{ $value['name'] }}</td>
+                                                <td>{{ $value['sex'] }}</td>
+                                                <td>{{ $value['created_at'] }}</td>
                                                 <td><a href="/admin/viewer/detail?id={{ $value['id'] }}">編集</a></td>
                                             </tr>
                                         @endforeach

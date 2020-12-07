@@ -218,8 +218,8 @@ class CastController extends Controller
 
     public function castAdminProfileImage(Request $request)
     {
-        $cast_id = $request->input('id');
-        $detail = CastAdmin::select('*')->where('id', $cast_id)->first()->toArray();
+        $cast = Auth::user();
+        $detail = CastAdmin::select('*')->where('id', $cast->id)->first()->toArray();
         Log::debug("sssssssssssssss");
         return view('/cast_admin/cast/profile_image', compact('detail'));
     }
@@ -247,19 +247,16 @@ class CastController extends Controller
 
     public function castAdminEdit(Request $request)
     {
-        $cast_id = $request->input('id');
-        $detail = CastAdmin::select('*')->where('id', $cast_id)->first()->toArray();
+        $cast = Auth::user();
+        $detail = CastAdmin::select('*')->where('id', $cast->id)->first()->toArray();
         return view('/cast_admin/cast/edit', compact('detail'));
     }
 
     public function castAdminDetail()
     {
-        $cast_id = $request->input('id');
-        $detail = CastAdmin::select('*')->where('id', $cast_id)->first()->toArray();
-        log::debug("aaaaaa");
-        log::debug($detail);
-
-        return view('/cast_admin/cast/detail');
+        $cast = Auth::user();
+        $detail = CastAdmin::select('*')->where('id', $cast->id)->first()->toArray();
+        return view('/cast_admin/cast/detail', compact('detail'));
     }
 
     // public function passwordEdit(Request $request)

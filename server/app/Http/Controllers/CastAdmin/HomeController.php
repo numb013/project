@@ -33,12 +33,7 @@ class HomeController extends Controller
         ->get();
         if ($request_list) {
             $request_list = $request_list->toArray();
-        }
-
-
-Log::debug("sssssseeeeeeessssssss");
-Log::debug($request_list);
-        
+        }        
         $column = "count('id') as notice_count";
         $notice_list = Notice::select(DB::raw($column))
         ->where('user_id', $cast->id)
@@ -47,6 +42,11 @@ Log::debug($request_list);
         if ($notice_list) {
             $notice_list = $notice_list->toArray();
         }
+
+
+        Log::debug("sssssseeeeeeessssssss");
+        Log::debug($cast);
+
         return view('cast_admin.home', compact('cast','request_list', 'notice_list'));
     }
 }

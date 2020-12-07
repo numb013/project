@@ -15,7 +15,7 @@ class CompanyService
         $this->company = $company;
     }
 
-    public function companyCount($param)
+    public function companyCount()
     {
         $company_list = Company::get();
         return $company_list->count();

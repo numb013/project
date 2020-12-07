@@ -17,7 +17,7 @@ class CastService
         $this->castAdmin = $castAdmin;
     }
 
-    public function castCount($param)
+    public function castCount()
     {
         $cast_list = CastAdmin::get();
         return $cast_list->count();
@@ -133,8 +133,8 @@ class CastService
 
         if (!empty($search_param['limit'])) {
             $query->limit($search_param['limit']);
-            if ($page_no != 1) {
-                $page_no = $page_no - 1;
+            if ($search_param['page_no'] != 1) {
+                $page_no = $search_param['page_no'] - 1;
                 $offset = ($search_param['limit'] * $page_no);
                 $query->offset($offset);
             }

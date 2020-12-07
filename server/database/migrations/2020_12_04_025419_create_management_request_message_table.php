@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ManageRequestMessageTable extends Migration
+class CreateManagementRequestMessageTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class ManageRequestMessageTable extends Migration
      */
     public function up()
     {
-        Schema::create('manage_request_message', function (Blueprint $table) {
+        Schema::create('manage_request_messages', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('request_list_id');
             $table->integer('admin_id')->nullable();
@@ -31,6 +31,6 @@ class ManageRequestMessageTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manage_request_message');
+        Schema::dropIfExists('manage_request_messages');
     }
 }
