@@ -9,40 +9,80 @@ use App\User;
 use App\Notice;
 use App\CastAdmin;
 use App\Company;
+use App\CategoryMaster;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Services\CastService;
 use App\Services\ProfileImageService;
-
+use App\Services\CategoryMasterService;
 
 
 class CastController extends Controller
 {
     private $castService;
     private $profileImageService;
+    private $categoryMasterService;
 
     public function __construct(
         CastService $castService,
-        ProfileImageService $profileImageService
+        ProfileImageService $profileImageService,
+        CategoryMasterService $categoryMasterService
     ) {
         // $this->middleware('auth');
         // $this->middleware('auth:cast_admin');
         $this->castService = $castService;
         $this->profileImageService = $profileImageService;
+        $this->categoryMasterService = $categoryMasterService;
     }
-
-
-
 
 
 
 
     /**
     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    * API管理者
+    * API
     * ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     */
+    public function apiCastList(Request $request)
+    {
+        $category_search_param = [
+            'is_ng' => 1,
+            'is_offcial' => 1,
+            'type' => 1,
+            'limit' => 5,
+            'sort_column' => 'order',
+            'sort_oder' => 'desc',
+            'page_no' => 1,
+        ];
+        $cast_category_list = $this->categoryMasterService->CategoryMasterSearch($search_param);
+        $cast_category_ids = array_column($cast_category_list, 'id');
+
+        $cast_search_param = [
+            'sort_column' => 'created_at',
+            'sort_order' => 'desc',
+            'limit' => '8',
+            'page_no' => 1,
+        ];
+        foreach ($cast_category_ids => $key => $category_id) {
+            $cast_search_param['category'] = $category_id;
+            $list['cast'][$cast_category_list[$key]] = $this->castService->castSearch($cast_search_param);
+        }
+        //ピックアップカテゴリーpage2にする事でリスト以降のカテゴリ取得
+        $category_search_param = [];
+        $category_search_param = [
+            'is_ng' => 1,
+            'is_offcial' => 1,
+            'type' => 1,
+            'limit' => 5,
+            'sort_column' => 'order',
+            'sort_oder' => 'desc',
+            'page_no' => 2,
+        ];
+        $list['pick_up_category'] = $this->categoryMasterService->CategoryMasterSearch($category_search_param);
+
+        return response()->json($list);
+    }
 
     //キャスト一覧
     public function apiSearch(Request $request)

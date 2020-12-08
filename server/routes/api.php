@@ -25,7 +25,8 @@ Route::group(["middleware" => "api"], function () {
     	Route::post('/viewer/update', 'ViewerController@apiUpdate');
     	Route::post('/viewer/mypage', 'ViewerController@apiMypage');
 
-    	//キャスト一覧
+		//キャスト一覧
+		Route::post('/cast/list', 'CastController@apiCastList');
 		Route::post('/cast/search', 'CastController@apiSearch');
 		Route::post('/cast/detail', 'CastController@apiDetail');
 

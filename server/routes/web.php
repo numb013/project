@@ -72,7 +72,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     Route::post('company/update', 'CompanyController@adminUpdate');
     Route::get('company/detail', 'CompanyController@adminDetail');
 
-
     //視聴者管理
     Route::get('viewer/list', 'ViewerController@adminList');
     Route::get('viewer/edit', 'ViewerController@adminEdit');
@@ -83,13 +82,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     //リクエスト管理
     Route::get('request_list/create', 'RequestListController@adminCreate');
     Route::post('request_list/complete', 'RequestListController@adminComplete');
-
-
     Route::get('request_list/list', 'RequestListController@adminList');
     Route::post('request_list/search', 'RequestListController@adminSearch');
     Route::get('request_list/edit', 'RequestListController@adminEdit');
     Route::post('request_list/update', 'RequestListController@adminUpdate');
     Route::get('request_list/detail', 'RequestListController@adminDetail');
+
+    //カテゴリー管理
+    Route::post('category/create', 'CategoryMasterController@adminCreate');
+    Route::post('category/update', 'CategoryMasterController@adminUpdate');
+    Route::post('category/order_change', 'CategoryMasterController@adminOrderChange');
+    Route::post('category/cast_category_list', 'CategoryMasterController@adminCastCategoryList');
+    Route::post('category/request_category_list', 'CategoryMasterController@adminRequestCategoryList');
 
     //お知らせ管理
     Route::get('notice/list', 'NoticeController@adminList');
